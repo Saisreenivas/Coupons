@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_margin="4dp"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:background="#fff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+
+                android:id="@+id/card_category_basic_data"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/card_list_img"
+                    android:background="@drawable/ic_menu_refer"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:id="@+id/card_category_title"
+                    android:textColor="#000"
+                    android:layout_margin="12dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_margin="12dp"
+                    android:padding="12dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/card_category_more"
+                    android:background="@drawable/card_expand_more"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:id="@+id/card_category_subs"
+                android:layout_below="@id/card_category_basic_data"
+                android:gravity="clip_horizontal"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="#545454"
+                    android:padding="4dp"
+                    android:id="@+id/card_category_sub1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sub-category 1"
+                    />
+                <TextView
+                    android:padding="4dp"
+                    android:id="@+id/card_category_sub2"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="#545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sub-category 2"
+                    />
+                <TextView
+                    android:padding="4dp"
+                    android:id="@+id/card_category_sub3"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="#545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sub-category 3"
+                    />
+                <TextView
+                    android:padding="4dp"
+                    android:id="@+id/card_category_sub4"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="#545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sub-category 4"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_below="@id/card_category_basic_data"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:paddingRight="12dp"
+                android:id="@+id/cardcategory_offs"
+                android:gravity="clip_horizontal"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:gravity="right"
+                    android:layout_gravity="right"
+                    android:text="X Offers"
+                    android:textColor="#545454"
+                    android:padding="4dp"
+                    android:id="@+id/card_category_offer1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:gravity="right"
+                    android:layout_gravity="right"
+                    android:text="X Offers"
+                    android:padding="4dp"
+                    android:id="@+id/card_category_offer2"
+                    android:textColor="#545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:gravity="right"
+                    android:id="@+id/card_category_offer3"
+                    android:layout_gravity="right"
+                    android:text="X Offers"
+                    android:padding="4dp"
+                    android:textColor="#545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:gravity="right"
+                    android:id="@+id/card_category_offer4"
+                    android:layout_gravity="right"
+                    android:text="X Offers"
+                    android:padding="4dp"
+                    android:textColor="#545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

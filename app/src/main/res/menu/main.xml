@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_notifications"
+        android:orderInCategory="100"
+        android:title="Notifications"
+        android:icon="@drawable/menu_notifications"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_balance"
+        android:orderInCategory="101"
+        android:title="$50"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="102"
+        android:title="Search"
+        app:showAsAction="always"
+        android:icon="@drawable/menu_search"/>
+</menu>

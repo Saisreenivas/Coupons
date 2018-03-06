@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/card_merchant_view"
+        android:layout_margin="4dp"
+
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:background="#fff"
+            android:id="@+id/card_offers_full"
+            android:paddingBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                app:layout_constraintDimensionRatio="1:1"
+                android:layout_width="50dp"
+                android:id="@+id/card_merchant_img"
+                android:src="@drawable/ic_menu_refer"
+                android:contentDescription="TODO" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:id="@+id/card_merch_comp_dat"
+                android:orientation="vertical"
+                android:layout_toLeftOf="@id/card_offers_more"
+                android:layout_toRightOf="@+id/card_merchant_img">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Merchant Name"
+                    android:textColor="#212121"
+                    android:id="@+id/card_offers_title"
+                    android:layout_marginBottom="2dp"
+                    style="@style/Base.TextAppearance.AppCompat.Title"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:id="@+id/card_offers_category"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#9E9E9E"/>
+
+            </LinearLayout>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:id="@+id/card_offers_more"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_more"
+                android:layout_alignParentRight="true"
+                android:padding="15dp"
+                android:layout_margin="10dp"
+                android:contentDescription="TODO" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/offer_data"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/card_offers_description"
+                android:layout_below="@id/card_merch_comp_dat"
+                android:textColor="#000"/>
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/card_offers_description"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/card_wallet"
+                    android:contentDescription="TODO" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text=" Upto X% Cd Cashback"
+                    android:id="@+id/card_offers_cashback_percent"
+                    android:textAllCaps="true"
+                    android:textColor="#8BC34A"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    style="@style/Base.TextAppearance.AppCompat.Small"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/group1">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_menu_profile"
+            android:title="Profile" />
+        <item
+            android:id="@+id/nav_refer_earn"
+            android:icon="@drawable/ic_menu_refer"
+            android:title="Refer &amp; Earn" />
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_menu_help"
+            android:title="Help &amp; Support" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_menu_feedback"
+            android:title="FeedBack" />
+    </group>
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_favourites"
+        android:title="Favourites"
+        android:icon="@drawable/ic_menu_favourites"
+        />
+    </group>
+    <item
+        android:id="@+id/nav_aboutus"
+        android:title="About Us" />
+    <group android:id="@+id/group3">
+        <item
+            android:id="@+id/btn_logout"
+            android:title="Logout"/>
+    </group>
+
+</menu>
