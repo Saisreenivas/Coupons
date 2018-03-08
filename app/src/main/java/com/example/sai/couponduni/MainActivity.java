@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -32,6 +33,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -42,6 +56,7 @@ import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabLayout.OnTabSelectedListener {
+
 
     // Alert Dialog Manager
     AlertDialogManager alert = new AlertDialogManager();
@@ -61,6 +76,9 @@ public class MainActivity extends AppCompatActivity
     TabLayout tabLayout;
     TabsPagerAdapter mAdapter;
 
+    GoogleApiClient mGoogleApiClient;
+    GoogleSignInOptions options;
+
     private String[] tabs = { "Best Offers", "Categories", "Top Stories" };
     private static int REQUEST_CODE = 25;
 
@@ -74,8 +92,48 @@ public class MainActivity extends AppCompatActivity
         navigationStartUp();
         sessionLogin();
 
+
+
+
+
+        configureSignIn();
+
         contentOfContentMain();
     }
+
+    private void configureSignIn() {
+        // Configure sign-in to request the user’s basic profile like name and email
+        options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+// Build a GoogleApiClient with access to GoogleSignIn.API and the options above.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                    }
+                }/* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, options)
+//                .addApi(AppInvite.API)
+                .build();
+/*
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(new ResultCallback<AppInviteInvitationResult>() {
+                    @Override
+                    public void onResult(@NonNull AppInviteInvitationResult appInviteInvitationResult) {
+                        if(appInviteInvitationResult.getStatus().isSuccess()){
+
+                            Intent intent = appInviteInvitationResult.getInvitationIntent();
+                            String Deeplink = AppInviteReferral.getDeepLink(intent);
+                            String invitationId = AppInviteReferral.getInvitationId(intent);
+                        }
+                    }
+                });*/
+    }
+
+
 
     private void contentOfContentMain() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -94,6 +152,9 @@ public class MainActivity extends AppCompatActivity
 //            tabLayout.addTab(tabLayout.newTab().setText(tab_name));
 //            tabLayout.setOnTabSelectedListener(this);
         }
+
+    }
+
 /*
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -118,7 +179,6 @@ public class MainActivity extends AppCompatActivity
             }
 
         });*/
-    }
 //
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -161,6 +221,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void toolbarAndFloatingBtn() {
+
+        /*Bundle intent = getIntent().getExtras();
+        if(intent!= null){
+            String data = intent.getString("wallet_balance").trim();
+            MenuItem button= (MenuItem) findViewById(R.id.action_balance);
+            button.setTitle("₹" + data);
+        }*/
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -211,14 +279,14 @@ public class MainActivity extends AppCompatActivity
         String email = user.get(SessionManager.KEY_EMAIL);
 
         if(name == null){
-            contentData.setVisibility(GONE);
+            contentData.setVisibility(View.GONE);
             contentLogin.setVisibility(View.VISIBLE);
             menuItem.setEnabled(false);
         }
         else {
             // displaying user data
-            lblName.setText(Html.fromHtml("Name: <b>" + name + "</b>"));
-            lblEmail.setText(Html.fromHtml("Email: <b>" + email + "</b>"));
+//            lblName.setText(Html.fromHtml("<b>" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName() + "</b>"));
+            lblEmail.setText(Html.fromHtml("<b>" + name + "</b>"));
             contentData.setVisibility(View.VISIBLE);
             contentLogin.setVisibility(GONE);
         }
@@ -263,6 +331,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -288,6 +357,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_profile) {
+            startActivity(new Intent(getApplication(), ProfileActivity.class));
 
         } else if (id == R.id.nav_refer_earn) {
             startActivity(new Intent(getApplication(), ReferAndEarnActivity.class));
@@ -302,6 +372,15 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
         } else if(id == R.id.btn_logout) {
             session.logoutUser();
+            FirebaseAuth.getInstance().signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+
+                }
+            });
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

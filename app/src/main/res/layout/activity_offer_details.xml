@@ -69,11 +69,24 @@
     </RelativeLayout>
 
     <Button
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_centerHorizontal="true"
+        android:text="Open in Flipkart App"
+        android:id="@+id/deep_linking"
+        android:linksClickable="true"
+        android:textAllCaps="false"
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        android:background="?attr/selectableItemBackground"
+        android:layout_alignParentBottom="true"/>
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/activateDeal"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/btn_act_selector"
+        android:layout_alignParentBottom="true"
         android:text="Activate Deal"
         android:textColor="#fff"/>
+
 </RelativeLayout>

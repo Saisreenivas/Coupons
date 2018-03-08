@@ -15,7 +15,7 @@ import Fragments.TopStoriesFragment;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
-    private String[] tabs = { "FlipKart", "Categories", "Stores"};
+    private String[] tabs = { "FlipKart", /*"Categories", */ "Stores", "icubes"};
 
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -32,12 +32,12 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case 0:
                 return new BestOffersFragment();
+/*            case 1:
+                return new CategoriesFragment();*/
             case 1:
-                return new CategoriesFragment();
-            case 2:
                 return new TopStoriesFragment();
-//            case 3:
-//                return new TopStories2Fragment();
+            case 2:
+                return new TopStories2Fragment();
         }
         return null;
     }

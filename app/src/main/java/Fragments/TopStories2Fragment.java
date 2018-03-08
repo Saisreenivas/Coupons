@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.sai.couponduni.R;
 
@@ -166,13 +167,12 @@ public class TopStories2Fragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             try{
-                URL url = new URL("http://assets.icubeswire.com/dealscoupons/api/getcoupon.php?API_KEY=2f27e0f4118efff145aeecd8367fbb37");
-
+//                URL url = new URL("http://assets.icubeswire.com/dealscoupons/api/getcoupon.php?API_KEY=2f27e0f4118efff145aeecd8367fbb37");
+                URL url = new URL("http://192.168.1.105/Coupons/icubes.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(15000  /*milliseconds*/ );
-                conn.setConnectTimeout(15000  /*milliseconds */);
+                conn.setReadTimeout(45000  /*milliseconds*/ );
+                conn.setConnectTimeout(45000  /*milliseconds */);
                 conn.setRequestMethod("GET");
-                conn.setRequestProperty("Network_ID", "icubes");
 
                 int responseCode=conn.getResponseCode();
 
@@ -203,13 +203,13 @@ public class TopStories2Fragment extends Fragment {
 
                 }
                 else {
-                    Log.v("False" , "false : " + responseCode);
-                    return "false : " + responseCode;
+                    Log.v("False3" , "false : " + responseCode);
+                    return "false3 : " + responseCode;
                 }
             }
             catch(Exception e){
-                Log.v("Exception-try/catch" , "false : " + e.getMessage());
-                return "try/catch : " + e.getMessage();
+                Log.v("Exception-try/catch3" , "false : " + e.getMessage());
+                return "try/catch3 : " + e.getMessage();
             }
 
         }
@@ -221,7 +221,7 @@ public class TopStories2Fragment extends Fragment {
                 setUpData(fullData);
                 bestOffersAdapter.notifyDataSetChanged();
             }
-            Log.v("onPostExecute", result);
+            Log.v("onPostExecute3", result);
 
         }
 
@@ -249,9 +249,13 @@ public class TopStories2Fragment extends Fragment {
         Bitmap bmp;
         try {
             while ((line = reader.readLine()) != null) {
+//                line =line + reader.readLine();
+                Log.v("TopStories3", line);
+//                line =line.replace("},]", "}]");
 
                 listOfOffers = new JSONArray(line);
-                Log.v("jsonArrayLine", listOfOffers.getJSONObject(1).toString());
+
+                Log.v("jsonArrayLine3", listOfOffers.getJSONObject(1).toString());
 
 //                ja = new JSONObject(line);
 //                Log.v("jsonArrayLine", ja.getJSONArray("allOffersList").toString());
@@ -263,12 +267,13 @@ public class TopStories2Fragment extends Fragment {
 
                     offerData.setMerchant(listOfOffers.getJSONObject(i).getString("Campaign_Name"));
                     offerData.setBasicDescription(listOfOffers.getJSONObject(i).getString("Description"));
+                    Log.v("dataSet3", "merchant and descriptionset");
                     offerData.setCategory(listOfOffers.getJSONObject(i).getString("Category"));
                     offerData.setCashBackPercentage(listOfOffers.getJSONObject(i).getString("Title"));
 //                    Log.v("offerData", listOfOffers.getJSONObject(i).getString("store_image"));
-                    URL url = new URL("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAyCAMAAAAuj2TTAAAAM1BMVEX////50s7teW3nTDzzpZ32vLbpV0j86ef63drqYlTsbmH3x8L99PPwj4Xym5LvhHn0sKn6vq2WAAADRklEQVR4Xt2Z2Y6DOBBFa/G6sPz/1w4uSJcbC8Ioo1E756HJ7RRWDnaZoMA1eaaKyTA4Mx+4ycPIeFYMjMxqEbMhrqQCw+ONY2YXYFwCYhAVGntOaO903MLEzAuMyso7c9lNMgyKT0Tp1emJOcLI+DoXBIAyJcPiPUB2zKtMyQTDQrQFy+wAzGILDIuZRUcafWisrQHnAINDBF/BGqOBb4A34Bsw9A0z4jEv0S0wNmGKvEP2tg49PKTgBih+i+FN9ad44oaY4YJcbRGegaeOM1ukN9UfYh3/ZrqoY/7TIpaVOxPPf1skcA9n6DHM7LIN/1IEjTH2QxEd5gbiHk4XhbPGpyIi8KGInn6N555IdCFi/q5IoMpkhIyIBZRrEY+6EfcRsVyJhLYw1MJWxGM47cmdyKcgsza7iTVE0epimWqizBu6clFEZAOP4ahzvJHyj0io77rXqDZxZfJtAyC8x+NGNsYsROlWhNrd7Rx9ZMH1IuxYcF7rNqyI6NskmsQHzj4S8awo053ILKPjsvfMOSZWziJCU5dyrgcUEWUGgEmjC09EYOIeV3phWT9kjC+vqxjlmfgUM+9e5hAJdfyEWERkwbUe6Kjz+4VcRKQ5rfzkRcqbYeCSkrjD3jW7fATcWOrxHKVBAgCsfbNzlAsneRa/jShl+Os0C/Mri0l51OzIHdOdiOEGc470uguVVqQ/EjcgoJ7WDnMY4iORlX9B1jGXz0XgfxeZmUMw0clURBJ5cyNim3tXH3Vp3YtMEg/+m6VF7OpfmU6YI0CJHC9FtLuL2SjnqM1+J6LNHowx69tmfyQSpSUsVnlYeb/I+VpExnSz7GKpj4mVGxEZLprZbXEWEcXITCjhmcixSUktFNwniW5EdMd2oY8lHeGNiO6WqRwiiYWpuyE+Egk/rW2ZdcVi30tEdCjbqN8eulhEjJA2ai0Rzf0RoBhxdaa8vvKVRTJ0o+ppN1hO2nDaD/T2iTxcR0QPT/DnQt+P+phJHzJUJDOvMBiOVxXx+l8OMBS2aYfmJfFgc1LiLxHTPsewH+ynXKsiCYRjG0cYhsIbi3Y4B3091Iz49ilq4WZKTEwZBoKaFZRG/lmhrAbbvojwBYTIMcAY/AP/aSKqpfNKWwAAAABJRU5ErkJggg==");
-                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    offerData.setImg(bmp);
+//                    URL url = new URL("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAyCAMAAAAuj2TTAAAAM1BMVEX////50s7teW3nTDzzpZ32vLbpV0j86ef63drqYlTsbmH3x8L99PPwj4Xym5LvhHn0sKn6vq2WAAADRklEQVR4Xt2Z2Y6DOBBFa/G6sPz/1w4uSJcbC8Ioo1E756HJ7RRWDnaZoMA1eaaKyTA4Mx+4ycPIeFYMjMxqEbMhrqQCw+ONY2YXYFwCYhAVGntOaO903MLEzAuMyso7c9lNMgyKT0Tp1emJOcLI+DoXBIAyJcPiPUB2zKtMyQTDQrQFy+wAzGILDIuZRUcafWisrQHnAINDBF/BGqOBb4A34Bsw9A0z4jEv0S0wNmGKvEP2tg49PKTgBih+i+FN9ad44oaY4YJcbRGegaeOM1ukN9UfYh3/ZrqoY/7TIpaVOxPPf1skcA9n6DHM7LIN/1IEjTH2QxEd5gbiHk4XhbPGpyIi8KGInn6N555IdCFi/q5IoMpkhIyIBZRrEY+6EfcRsVyJhLYw1MJWxGM47cmdyKcgsza7iTVE0epimWqizBu6clFEZAOP4ahzvJHyj0io77rXqDZxZfJtAyC8x+NGNsYsROlWhNrd7Rx9ZMH1IuxYcF7rNqyI6NskmsQHzj4S8awo053ILKPjsvfMOSZWziJCU5dyrgcUEWUGgEmjC09EYOIeV3phWT9kjC+vqxjlmfgUM+9e5hAJdfyEWERkwbUe6Kjz+4VcRKQ5rfzkRcqbYeCSkrjD3jW7fATcWOrxHKVBAgCsfbNzlAsneRa/jShl+Os0C/Mri0l51OzIHdOdiOEGc470uguVVqQ/EjcgoJ7WDnMY4iORlX9B1jGXz0XgfxeZmUMw0clURBJ5cyNim3tXH3Vp3YtMEg/+m6VF7OpfmU6YI0CJHC9FtLuL2SjnqM1+J6LNHowx69tmfyQSpSUsVnlYeb/I+VpExnSz7GKpj4mVGxEZLprZbXEWEcXITCjhmcixSUktFNwniW5EdMd2oY8lHeGNiO6WqRwiiYWpuyE+Egk/rW2ZdcVi30tEdCjbqN8eulhEjJA2ai0Rzf0RoBhxdaa8vvKVRTJ0o+ppN1hO2nDaD/T2iTxcR0QPT/DnQt+P+phJHzJUJDOvMBiOVxXx+l8OMBS2aYfmJfFgc1LiLxHTPsewH+ynXKsiCYRjG0cYhsIbi3Y4B3091Iz49ilq4WZKTEwZBoKaFZRG/lmhrAbbvojwBYTIMcAY/AP/aSKqpfNKWwAAAABJRU5ErkJggg==");
+//                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                    offerData.setImg(bmp);
                     offerData.setActivateUrl(listOfOffers.getJSONObject(i).getString("Tracking_URL"));
 //                    offerData.setImgUrl(listOfOffers.getJSONObject(i).getJSONArray("imageUrls").getJSONObject(1).getInt("url"));
 //                    for(int j=0; i< listOfOffers.getJSONObject(i).getJSONObject("imageUrls").length();i++) {
@@ -278,6 +283,7 @@ public class TopStories2Fragment extends Fragment {
 //                    }
 
                     bestOffersDataList.add(offerData);
+                    Log.v("listofOffers3FinalCheck", bestOffersDataList.size() + " ");
                 }
 
                /* for (int i = 0; i < ja.length(); i++) {
@@ -289,17 +295,18 @@ public class TopStories2Fragment extends Fragment {
 //                Log.v("StreamtoString", line+" Hello");
             }
         } catch (IOException e) {
-            Log.v("StreamtoString", e.getMessage());
+//            Toast.makeText(parent, "Data Overloaded3", Toast.LENGTH_LONG).show();
+            Log.v("StreamtoString3", e.getMessage());
         } catch (JSONException e) {
-            Log.v("JsonError",  e.getMessage());
+            Log.v("JsonError3",  e.getMessage());
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                Log.v("StreamtoString", e.getMessage());
+                Log.v("StreamtoString3", e.getMessage());
             }
         }
-        Log.v("StreamtoString",bestOffersDataList.get(1).getMerchant()) ;
+        Log.v("StreamtoString3",bestOffersDataList.get(1).getMerchant()) ;
         return bestOffersDataList;
     }
 

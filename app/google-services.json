@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "17550999738",
+    "firebase_url": "https://coupons-9a63a.firebaseio.com",
+    "project_id": "coupons-9a63a",
+    "storage_bucket": "coupons-9a63a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17550999738:android:c4e6b029fb758284",
+        "android_client_info": {
+          "package_name": "com.example.sai.couponduni"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17550999738-43ol08kl95dl7d2mibqc6phhduhccdvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7DCXaaO0rS7Cr8XPOvpLGC8Dtg-yxD60"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -146,6 +146,7 @@ public class TopStoriesFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
             progress.incrementProgressBy(progr[index]);
             ++index;
         }
@@ -215,6 +216,7 @@ public class TopStoriesFragment extends Fragment {
         }
         @Override
         protected void onPostExecute(final String result) {
+            progress.setProgress(100);
             progress.setVisibility(GONE);
             if(result.equals("containsData")){
 //                runResultsOnUi(fullData);
@@ -257,7 +259,7 @@ public class TopStoriesFragment extends Fragment {
 //                ja = new JSONObject(line);
 //                Log.v("jsonArrayLine", ja.getJSONArray("allOffersList").toString());
 //                listOfOffers = ja.getJSONArray();
-                for(int i = 0; i< 100; i++){
+                for(int i = 0; i< 5; i++){
                     OfferData offerData = new OfferData();
                     Log.v("listOfOffers2", listOfOffers.getJSONObject(i).getString("store_name") +
                             listOfOffers.getJSONObject(i).getString("category"));

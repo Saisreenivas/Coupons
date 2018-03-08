@@ -36,4 +36,8 @@
 
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="refer_data">Refer your friends and get 10% of their cashback \nearnings forever</string>
+    <string name="err_msg_email">Email is of wrong format</string>
+    <string name="err_msg_required">Invalid Email</string>
+    <string name="err_msg_password">Password is of wrong format</string>
+    <string name="auth_failed">Email or Password is invalid</string>
 </resources>

@@ -63,7 +63,7 @@ public class BestOffersFragment extends Fragment {
     Handler mHandler = new Handler();
     private View itemView;
 //    private static final String TAG = "MainActivity";
-        private static final String URL = "https://affiliate-api.flipkart.net/affiliate/offers/v1/all/json";
+        private static final String URL = "https://dl.affiliate-api.flipkart.net/affiliate/offers/v1/all/json";
     private boolean isRunning = true;
 
     @Override
@@ -265,7 +265,7 @@ public class BestOffersFragment extends Fragment {
 
                 Log.v("jsonArrayLine", ja.getJSONArray("allOffersList").toString());
                 listOfOffers = ja.getJSONArray("allOffersList");
-                for(int i=0;i< 100; i++){
+                for(int i=0;i< 5; i++){
                     OfferData offerData = new OfferData();
                     Log.v("listOfOffers", listOfOffers.getJSONObject(i).getString("title") +
                             listOfOffers.getJSONObject(i).getString("description"));

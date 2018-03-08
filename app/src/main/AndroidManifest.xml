@@ -17,8 +17,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,8 +42,14 @@
             android:name=".OfferDetailsActivity"
             android:label="Offer Details" />
         <activity android:name=".CategoryDetailsActivity" />
-        <activity android:name=".EmptyLoadingActivity" />
-        <activity android:name=".ReferAndEarnActivity"></activity>
+        <activity android:name=".ReferAndEarnActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ProfileActivity"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".AccountDetailsActivity"
+            android:label="Bank Account Details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

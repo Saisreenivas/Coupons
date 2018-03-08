@@ -16,7 +16,6 @@ import com.example.sai.couponduni.LoginActivity;
 public class SessionManager {
     // Shared Preferences
     SharedPreferences pref;
-
     // Editor for Shared preferences
     Editor editor;
 
@@ -38,6 +37,9 @@ public class SessionManager {
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
 
+    // Referral
+    public static final String KEY_REFERRAL = "referral";
+
     // Constructor
     public SessionManager(Context context){
         this._context = context;
@@ -48,7 +50,7 @@ public class SessionManager {
     /**
      * Create login session
      * */
-    public void createLoginSession(String name, String email){
+    public void createLoginSession(String name, String email, String referral){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -57,6 +59,9 @@ public class SessionManager {
 
         // Storing email in pref
         editor.putString(KEY_EMAIL, email);
+
+        // Storing my referral_code in pref
+        editor.putString(KEY_REFERRAL, referral);
 
         // commit changes
         editor.commit();
@@ -96,6 +101,9 @@ public class SessionManager {
 
         // user email id
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
+
+        // user referral id
+        user.put(KEY_REFERRAL, pref.getString(KEY_REFERRAL, null));
 
         // return user
         return user;
