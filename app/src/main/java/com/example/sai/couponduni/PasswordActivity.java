@@ -404,7 +404,7 @@ public class PasswordActivity extends AppCompatActivity implements View.OnClickL
 //                setUpData(fullData);
 //                bestOffersAdapter.notifyDataSetChanged();
             } else{
-                Toast.makeText(PasswordActivity.this, "sign in failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(PasswordActivity.this, "sign in failed..", Toast.LENGTH_LONG).show();
             }
 
         }
