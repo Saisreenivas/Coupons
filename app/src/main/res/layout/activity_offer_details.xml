@@ -44,7 +44,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/offer_data" />
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:paddingBottom="10dp"
@@ -65,7 +65,7 @@
             android:layout_toRightOf="@id/offer_details_uses"
             android:layout_below="@id/offer_details_line"
             android:text="89% Success"/>
-
+-->
     </RelativeLayout>
 
     <Button

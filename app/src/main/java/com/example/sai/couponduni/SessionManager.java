@@ -18,7 +18,6 @@ public class SessionManager {
     SharedPreferences pref;
     // Editor for Shared preferences
     Editor editor;
-
     // Context
     Context _context;
 
@@ -40,6 +39,9 @@ public class SessionManager {
     // Referral
     public static final String KEY_REFERRAL = "referral";
 
+    // wallet
+    public static final String KEY_WALLET_BAL = "wallet";
+
     // Constructor
     public SessionManager(Context context){
         this._context = context;
@@ -50,7 +52,7 @@ public class SessionManager {
     /**
      * Create login session
      * */
-    public void createLoginSession(String name, String email, String referral){
+    public void createLoginSession(String name, String email, String referral, String wallet1){
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -62,6 +64,9 @@ public class SessionManager {
 
         // Storing my referral_code in pref
         editor.putString(KEY_REFERRAL, referral);
+
+        // Storing my wallet_balance in pref
+        editor.putString(KEY_WALLET_BAL, wallet1);
 
         // commit changes
         editor.commit();
@@ -104,6 +109,9 @@ public class SessionManager {
 
         // user referral id
         user.put(KEY_REFERRAL, pref.getString(KEY_REFERRAL, null));
+
+        // user wallet
+        user.put(KEY_WALLET_BAL, pref.getString(KEY_WALLET_BAL, null));
 
         // return user
         return user;

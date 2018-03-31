@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorAccent">#448AFF</color>
     <color name="actionBarDivider">#BDBDBD</color>
+    <color name="tab_background_selected">#eaeaea</color>
+    <color name="tab_background_unselected">#aeaeae</color>
 </resources>

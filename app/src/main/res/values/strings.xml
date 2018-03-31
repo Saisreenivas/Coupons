@@ -30,14 +30,21 @@
         meaning for your product. What’s more, good stories are sticky -- which means people are
         more likely to connect with them and pass them on.</string>
 
+    <string name="share_referral_main">Hey, I\'ve been using Coupons to get paid for my online shopping. they pay caashback for big online stores like flipkart, amazon, paytm and others. Its free to become a member and very easy to use. It\'s helped me save and you should try it too. Use my referral code to earn Rs.49 on your Sign Up. CODE: </string>
+    <string name="share_referral">Hey, I\'ve been using Coupons to get paid for my online shopping. Sign Up through my referral code and earn Rs.49 on your registration. CODE: </string>
 
     <string name="app_name">Coupons</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
 
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="refer_data">Refer your friends and get 10% of their cashback \nearnings forever</string>
+    <string name="refer_data_main">Refer your friends and get 10% of their cashback \nearnings forever</string>
+    <string name="refer_data">Refer your friends and earn Rs.49 on Sign Up</string>
     <string name="err_msg_email">Email is of wrong format</string>
-    <string name="err_msg_required">Invalid Email</string>
+    <string name="err_msg_required">Minimum of 6 charectors required</string>
+    <string name="err_email_required">Invalid Email</string>
     <string name="err_msg_password">Password is of wrong format</string>
     <string name="auth_failed">Email or Password is invalid</string>
+
+    <string name="facebook_app_id">430174674082628</string>
+    <string name="fb_login_protocol_scheme">fb430174674082628</string>
 </resources>

@@ -11,61 +11,75 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/invite_referral"
-            android:textIsSelectable="true"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
-            android:text="Ajdn2ndfiKA"
-            android:layout_height="wrap_content" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Share"
-            android:layout_gravity="center_horizontal"/>
     <TextView
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Refer and Earn"
         style="@style/Base.TextAppearance.AppCompat.Title"
+        android:padding="10dp"
         android:layout_centerHorizontal="true"/>
-    <ImageView
+        <ImageView
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
         android:background="@drawable/activity_refer_and_earn" />
-    <TextView
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/refer_data"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
+            android:padding="10dp"
         style="@style/Base.TextAppearance.AppCompat.Small"/>
 
-    <TextView
+        <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Details"
         android:padding="10dp"
         android:layout_gravity="center_horizontal"
-        android:textColor="#0000ff"/>
-    <View
+        android:textColor="#0000ff"/>-->
+        <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#eaeaea"
         android:layout_margin="16dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp"
-        style="@style/Base.TextAppearance.AppCompat.Small"
-        android:text="REFER AND EARN"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content">
 
-        <TextView
+            <TextView
+                android:gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:text="REFERRAL CODE:"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:id="@+id/invite_referral"
+                android:textIsSelectable="true"
+                android:textSize="18sp"
+                android:text="Ajdn2ndfiKA"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:background="?attr/selectableItemBackground"
+            android:text="Share"
+            android:padding="10dp"
+            android:id="@+id/btn_share_referral"
+            android:layout_gravity="center_horizontal"/>
+
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Already have a referal code?"/>
@@ -80,8 +94,8 @@
             android:id="@+id/btn_activate_referral"
             android:layout_height="wrap_content"
             android:text="Activate"
-            android:layout_gravity="center_horizontal"/>
-    <LinearLayout
+            android:layout_gravity="center_horizontal"/>-->
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
@@ -100,41 +114,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/icons_whatsapp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:paddingTop="16dp"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="3"
-            android:background="#eaeaea"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_margin="6dp"
-            android:layout_height="wrap_content"
-            android:text="OR" />
-        <View
-            android:layout_weight="3"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_height="1dp"
-            android:background="#eaeaea"/>
-    </LinearLayout>
-
-    <TextView
+    </LinearLayout>-->
+<!--    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Share the link"
         android:layout_margin="12dp"
         android:textAllCaps="true"
         android:id="@+id/share_the_link"
-        android:layout_gravity="center_horizontal"/>
-    <TextView
+        android:layout_gravity="center_horizontal"/>-->
+
+<!--
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingTop="16dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3"
+                android:background="#eaeaea"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_height="wrap_content"
+                android:text="OR" />
+            <View
+                android:layout_weight="3"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_height="1dp"
+                android:background="#eaeaea"/>
+        </LinearLayout>
+-->
+<!--        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:longClickable="true"
@@ -158,6 +174,6 @@
             android:paddingBottom="24dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:text="No members have joined using your referral code."/>
+            android:text="No members have joined using your referral code."/>-->
     </LinearLayout>
 </ScrollView>

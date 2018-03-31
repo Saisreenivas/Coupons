@@ -18,7 +18,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:id="@+id/card_list_img"
-                    android:background="@drawable/ic_menu_refer"
+                    android:background="@drawable/card_categories"
                     android:padding="10dp"
                     android:layout_margin="10dp"
                     />
@@ -31,14 +31,21 @@
                     android:layout_margin="12dp"
                     android:layout_weight="1"
                     android:layout_gravity="center" />
+                <!--<TextView
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="252 Offers"
+                    android:padding="12dp"
+                    android:id="@+id/card_category_number_of_offers"
+                    android:layout_height="wrap_content" />-->
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_gravity="right|center_vertical"
-                    android:layout_margin="12dp"
-                    android:padding="12dp"
+                    android:layout_margin="2dp"
+                    android:padding="10dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/card_category_more"
-                    android:background="@drawable/card_expand_more"/>
+                    android:src="@drawable/card_expand_more"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

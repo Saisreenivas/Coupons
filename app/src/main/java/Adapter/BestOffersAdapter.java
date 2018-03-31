@@ -1,6 +1,7 @@
 package Adapter;
 
-import android.app.Activity;
+import
+        android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,12 +9,14 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,7 +32,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import Fragments.BestOffersFragment;
 import Model.OfferData;
+
+import static android.support.v7.widget.RecyclerView.*;
 
 /**
  * Created by sai on 1/3/18.
@@ -37,6 +43,10 @@ import Model.OfferData;
 
 public class BestOffersAdapter extends RecyclerView.Adapter<BestOffersAdapter.ViewHolder>{
 
+
+
+    private static final int VIEW_ITEM = 1;
+    private static final int VIEW_PROG = 0;
     private Context context;
     private ArrayList<OfferData> offerDataList;
 
@@ -65,20 +75,35 @@ public class BestOffersAdapter extends RecyclerView.Adapter<BestOffersAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_merchant_complicated, parent, false);
+        ViewHolder vh = null;
 
-        return new ViewHolder(itemView);
+//        if(viewType == VIEW_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_merchant_complicated, parent, false);
+            vh = new ViewHolder(itemView);
+//        }
+        /*else{
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.progressbar_item,parent, false);
+            vh = new ViewHolder(itemView);
+        }*/
+
+        return vh;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+
         final OfferData offerData = offerDataList.get(position);
         holder.merchantName.setText(offerData.getMerchant());
         holder.categoryName.setText(offerData.getCategory());
         holder.description.setText(offerData.getBasicDescription());
         holder.cashBackPercent.setText(offerData.getCashBackPercentage());
-        holder.merchantImg.setImageBitmap(offerData.getImg());
+        if(offerData.getImg() == null){
+
+        }else{
+            holder.merchantImg.setImageBitmap(offerData.getImg());
+        }
 //        holder.merchantImg.setImageResource(offerData.getImgUrl());
 //        try {
 //            URL url = null;
@@ -108,12 +133,22 @@ public class BestOffersAdapter extends RecyclerView.Adapter<BestOffersAdapter.Vi
         holder.cardMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.cardMore, position);
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                        offerDataList.get(position).getMerchant() + " "
+                                +offerDataList.get(position).getBasicDescription());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this" +
+                        "amazing offer");
+                context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+
+//                showPopupMenu(holder.cardMore, position);
             }
         });
+
     }
 
-    private void showPopupMenu(View view, int position) {
+    /*private void showPopupMenu(View view, int position) {
         // inflate menu
         PopupMenu popup = new PopupMenu(context, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -121,6 +156,7 @@ public class BestOffersAdapter extends RecyclerView.Adapter<BestOffersAdapter.Vi
         popup.setOnMenuItemClickListener(new MyMenuItemClickListener(position));
         popup.show();
     }
+
 
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
@@ -143,15 +179,15 @@ public class BestOffersAdapter extends RecyclerView.Adapter<BestOffersAdapter.Vi
                     context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
 //                    Toast.makeText(context, "Add to favourite", Toast.LENGTH_SHORT).show();
                     return true;
-                case R.id.card_offers_show_all:
+*//*                case R.id.card_offers_show_all:
                     context.startActivity(new Intent(context, MerchantDetailsActivity.class));
 //                    Toast.makeText(context, "Play next", Toast.LENGTH_SHORT).show();
-                    return true;
+                    return true;*//*
                 default:
             }
             return false;
         }
-    }
+    }*/
 
     @Override
     public int getItemCount() {

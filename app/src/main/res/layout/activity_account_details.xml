@@ -27,11 +27,14 @@
                 android:background="@drawable/acc_holder_name"/>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
+                android:id="@+id/acc_holder_text_layout"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content">
                 <EditText
                     android:layout_width="match_parent"
+                    android:singleLine="true"
+                    android:id="@+id/acc_holder_text"
                     android:hint="Account Holder's Name"
                     android:layout_height="match_parent" />
             </android.support.design.widget.TextInputLayout>
@@ -50,12 +53,15 @@
                 android:background="@drawable/acc_holder_ifsc"/>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
+                android:id="@+id/acc_ifsc_text_layout"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content">
                 <EditText
                     android:layout_width="match_parent"
                     android:hint="IFSC Code"
+                    android:singleLine="true"
+                    android:id="@+id/acc_ifsc_text"
                     android:layout_height="match_parent" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -73,11 +79,14 @@
                 android:background="@drawable/acc_holder_no"/>
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
+                android:id="@+id/acc_no_text_layout"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content">
                 <EditText
                     android:layout_width="match_parent"
+                    android:id="@+id/acc_no_text"
+                    android:singleLine="true"
                     android:hint="Account Number"
                     android:layout_height="match_parent" />
             </android.support.design.widget.TextInputLayout>
@@ -87,9 +96,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="Redeem"
             android:layout_alignParentRight="true"
+            android:id="@+id/acc_save_btn"
             android:background="?attr/selectableItemBackground"
+            android:layout_below="@id/acc_no_layout"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_acc"
+            android:layout_toLeftOf="@id/acc_save_btn"
             android:layout_below="@id/acc_no_layout"/>
 
     </RelativeLayout>

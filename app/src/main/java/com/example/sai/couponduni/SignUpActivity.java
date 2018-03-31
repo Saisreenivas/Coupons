@@ -4,26 +4,31 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.auth.AuthResult;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,17 +50,20 @@ import Utils.RandomString;
 
 import static android.view.View.GONE;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "signInCheck";
     TextInputLayout signupInputLayoutEmail, signupInputLayoutPassword;
     Button btnSignUp, btnLinkToLogIn;
     public EditText signupInputEmail, signupInputPassword, signUpReferralCode;
     ProgressBar progressBar;
-    FirebaseAuth auth;
+//    FirebaseAuth auth;
     SessionManager session;
     TextView resultText, signUpInviteCode;
     String random;
+    String email;
+    String password;
+    ImageButton imageShowHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         signupInputLayoutEmail = (TextInputLayout) findViewById(R.id.signup_input_layout_email);
         signupInputLayoutPassword = (TextInputLayout) findViewById(R.id.signup_input_layout_password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_me);
 
         signupInputEmail = (EditText) findViewById(R.id.signup_input_email);
         signupInputPassword = (EditText) findViewById(R.id.signup_input_password);
@@ -84,6 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpInviteCode = (TextView) findViewById(R.id.signup_invite_code);
         signUpInviteCode.setText("Your Referral Code: " + random);
 
+        imageShowHide = (ImageButton) findViewById(R.id.pass_show_hide_up);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,14 +109,19 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        imageShowHide.setImageResource(R.drawable.password_view);
+        imageShowHide.setTag(R.drawable.password_view);
+        imageShowHide.setOnClickListener(this);
+
     }
 
 
 
     private void submitForm() {
 
-        final String email = signupInputEmail.getText().toString().trim();
-        final String password = signupInputPassword.getText().toString().trim();
+        email = signupInputEmail.getText().toString().trim();
+        password = signupInputPassword.getText().toString().trim();
 
         if (!checkEmail()) {
             return;
@@ -117,11 +131,13 @@ public class SignUpActivity extends AppCompatActivity {
         }
         signupInputLayoutEmail.setErrorEnabled(false);
         signupInputLayoutPassword.setErrorEnabled(false);
-
         progressBar.setVisibility(View.VISIBLE);
+        new GetDataForContent(getParent(), progressBar ,email, password, random).execute();
 
 
-        new GetDataForContent(getParent(), email, password).execute();
+
+
+
         /*//create user
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
@@ -159,7 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             signupInputLayoutEmail.setErrorEnabled(true);
             signupInputLayoutEmail.setError(getString(R.string.err_msg_email));
-            signupInputEmail.setError(getString(R.string.err_msg_required));
+            signupInputEmail.setError(getString(R.string.err_email_required));
             requestFocus(signupInputEmail);
             return false;
         }
@@ -176,6 +192,7 @@ public class SignUpActivity extends AppCompatActivity {
             signupInputPassword.setError(getString(R.string.err_msg_required));
             requestFocus(signupInputPassword);
             return false;
+            
         }
         signupInputLayoutPassword.setErrorEnabled(false);
         return true;
@@ -201,6 +218,22 @@ public class SignUpActivity extends AppCompatActivity {
 //        progressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.pass_show_hide_up){
+            Integer pass = (Integer)imageShowHide.getTag();
+            if(pass == R.drawable.password_view){
+                signupInputPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                imageShowHide.setImageResource(R.drawable.password_hide);
+                imageShowHide.setTag(R.drawable.password_hide);
+            }else{
+                signupInputPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                imageShowHide.setImageResource(R.drawable.password_view);
+                imageShowHide.setTag(R.drawable.password_view);
+            }
+        }
+    }
+
 
     private class GetDataForContent extends AsyncTask<String, Void, String> {
 
@@ -209,32 +242,32 @@ public class SignUpActivity extends AppCompatActivity {
         private int index;
 
         private final Activity parent;
-        //        private final ProgressBar progress;
-        private final String email, password;
+        private final ProgressBar progress;
+        private final String email, password, random;
 
 
-        public GetDataForContent(Activity parent/*, ProgressBar progress*/, String emailId, String password) {
-            this.parent = parent;
-            /*this.progress = progress;*/
+        public GetDataForContent(Activity parent,ProgressBar progress ,String emailId, String password, String random) {
+            this.random =random;
             this.email = emailId;
             this.password = password;
+            this.parent = parent;
+            this.progress = progress;
         }
-/*
         @Override
         protected void onProgressUpdate(Void... values) {
             progress.incrementProgressBy(progr[index]);
             ++index;
-        }*/
+        }
 
 
         @Override
         protected void onPreExecute() {
-            /*int max = 0;
+            int max = 0;
             for (final int p : progr) {
                 max += p;
             }
             progress.setMax(max);
-            index = 0;*/
+            index = 0;
         }
 
 
@@ -244,7 +277,7 @@ public class SignUpActivity extends AppCompatActivity {
             try{
 
 
-                URL url = new URL("http://192.168.1.105/Coupons/sign_up.php?username=" + email
+                URL url = new URL("http://couponkhajana.com/android/Coupons/sign_up.php?username=" + email
                         +"&password=" + password +"&referred_by=" + signUpReferralCode.getText()
                         +"&referral_code=" + random +"&wallet_balance=");
 
@@ -283,6 +316,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 if(ja.getBoolean("referral_activation") &&
                                         ja.getBoolean("referred_by_activation") && ja.getBoolean("referal_Code")){
 
+//                                    String wallet = String.valueOf(0);
+//                                    session.createLoginSession(email, " ", random, wallet);
                                     return "SignUp Successful\nReferral Code Activated";
                                 }
                             }else{
@@ -368,17 +403,22 @@ public class SignUpActivity extends AppCompatActivity {
 
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(final String result) {
-//            progress.setVisibility(GONE);
+            progress.setVisibility(GONE);
 //                runResultsOnUi(fullData);
 
-                    resultText.setText(result);
-                    if(Objects.equals(result, "Already Signed up") ||
-                            Objects.equals(result, "SignUp Successful\nReferral Code Activated")){
-                        session.createLoginSession(email, " ", random);
-                        startActivity(new Intent(parent, MainActivity.class));
+                    if(result.contains("Already Signed up") ||
+                            result.contains("SignUp Successful\nReferral Code Activated")){
+                        resultText.setText("SignUp Successful");
+                        Log.v("Signupdetails", "SignUp Success");
+                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                         finish();
+                    }else {
+                        resultText.setText(result);
+                        Log.v("Signupdetails", "SignUp Failed");
+//                        Toast.makeText(SignUpActivity.this, "SignUp Failed", Toast.LENGTH_LONG).show();
                     }
 //                Intent intent = new Intent(parent, MainActivity.class);
 //                session.createLoginSession(email, password);

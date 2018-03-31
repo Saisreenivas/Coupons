@@ -1,5 +1,6 @@
 package com.example.sai.couponduni;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,14 +13,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.auth.UserProfileChangeRequest;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseError;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.ValueEventListener;
 
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ public class ReferAndEarnActivity extends AppCompatActivity {
     TextView referalCodeMine;
     Button btnactivateReferal;
     EditText activateReferal;
+    Button btnShareReferral;
     SessionManager session;
 
     @Override
@@ -46,6 +48,7 @@ public class ReferAndEarnActivity extends AppCompatActivity {
         setContentView(R.layout.activity_refer_and_earn);
 
         referalCodeMine = (TextView) findViewById(R.id.invite_referral);
+        btnShareReferral = (Button) findViewById(R.id.btn_share_referral);
 
         session = new SessionManager(getApplicationContext());
         if(session.isLoggedIn()){
@@ -53,6 +56,18 @@ public class ReferAndEarnActivity extends AppCompatActivity {
             HashMap<String, String > user =session.getUserDetails();
             referalCodeMine.setText(user.get(SessionManager.KEY_REFERRAL));
         }
+
+        btnShareReferral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                        getResources().getString(R.string.share_referral) + referalCodeMine.getText().toString());
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Coupons App");
+                startActivity(Intent.createChooser(sharingIntent, "Share using"));
+            }
+        });
 //        FirebaseAuth auth = FirebaseAuth.getInstance();
 //        final FirebaseUser user = auth.getCurrentUser();
 //                            Toast.makeText(getApplicationContext(), user + " " + user.getUid() + " ", Toast.LENGTH_LONG).show();
@@ -60,12 +75,12 @@ public class ReferAndEarnActivity extends AppCompatActivity {
 //        final DatabaseReference myRef = database.getReference("users/" + user.getUid());
 
 
-        btnactivateReferal = (Button) findViewById(R.id.btn_activate_referral);
-        activateReferal = (EditText) findViewById(R.id.activate_my_referral);
+//        btnactivateReferal = (Button) findViewById(R.id.btn_activate_referral);
+//        activateReferal = (EditText) findViewById(R.id.activate_my_referral);
 
-        btnactivateReferal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        btnactivateReferal.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
 //                DatabaseReference myReferen = database.getReference("referalcodes/"+ activateReferal.getText());
 /*                myReferen.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -82,8 +97,8 @@ public class ReferAndEarnActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Entered Code does not exists", Toast.LENGTH_LONG).show();
                     }
                 });*/
-            }
-        });
+//            }
+//        });
 
 //        String UploadId = user.getUid();
 

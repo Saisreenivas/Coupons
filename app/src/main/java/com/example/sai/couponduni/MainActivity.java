@@ -8,8 +8,10 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -33,22 +35,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.appinvite.AppInviteInvitationResult;
-import com.google.android.gms.appinvite.AppInviteReferral;
+//import com.google.android.gms.appinvite.AppInvite;
+//import com.google.android.gms.appinvite.AppInviteInvitationResult;
+//import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
+import Adapter.ImagesPagerAdapter;
 import Adapter.TabsPagerAdapter;
 import Model.OfferData;
 
@@ -64,6 +68,8 @@ public class MainActivity extends AppCompatActivity
     // Session Manager Class
     SessionManager session;
 
+    Menu menu;
+
     // Button Logout
     Button btnLogout, contentLoginBtn;
     LinearLayout contentData, contentLogin;
@@ -71,21 +77,35 @@ public class MainActivity extends AppCompatActivity
     MenuItem menuItem;
 
     //viewPager
-    ViewPager viewPager;
+    ViewPager viewPager, viewImagePager;
 //    Toolbar actionBar;
-    TabLayout tabLayout;
+    TabLayout tabLayout, tabImageLayout;
     TabsPagerAdapter mAdapter;
+    ImagesPagerAdapter mImageAdapter;
 
     GoogleApiClient mGoogleApiClient;
     GoogleSignInOptions options;
 
     private String[] tabs = { "Best Offers", "Categories", "Top Stories" };
     private static int REQUEST_CODE = 25;
+    String wallet;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            String email = extras.getString("email");
+            String password = extras.getString("password");
+            String referral_code = extras.getString("referral_code");
+            String wallet_balance = extras.getString("wallet_balance");
+            Log.v("walletBalance", wallet_balance);
+            session.createLoginSession(email, password, referral_code, wallet_balance);
+        }*/
+
 
 //        startActivityForResult(new Intent(MainActivity.this, EmptyLoadingActivity.class), REQUEST_CODE);
         toolbarAndFloatingBtn();
@@ -94,10 +114,16 @@ public class MainActivity extends AppCompatActivity
 
 
 
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        Menu menu = navigationView.getMenu();
+//        MenuItem button= (MenuItem) navigationView.findViewById(R.id.action_balance);
+//        button.setTitle("₹Rupee");
+
+
 
 
         configureSignIn();
-
+        imagesOfTopBar();
         contentOfContentMain();
     }
 
@@ -117,22 +143,20 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, options)
 //                .addApi(AppInvite.API)
                 .build();
-/*
-        boolean autoLaunchDeepLink = true;
-        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
-                .setResultCallback(new ResultCallback<AppInviteInvitationResult>() {
-                    @Override
-                    public void onResult(@NonNull AppInviteInvitationResult appInviteInvitationResult) {
-                        if(appInviteInvitationResult.getStatus().isSuccess()){
 
-                            Intent intent = appInviteInvitationResult.getInvitationIntent();
-                            String Deeplink = AppInviteReferral.getDeepLink(intent);
-                            String invitationId = AppInviteReferral.getInvitationId(intent);
-                        }
-                    }
-                });*/
     }
 
+    private void imagesOfTopBar(){
+        viewImagePager = (ViewPager) findViewById(R.id.img_scroll_view_pager);
+        tabImageLayout = (TabLayout) findViewById(R.id.img_scroll_tab_layout);
+//        actionBar = (Toolbar) findViewById(R.id.toolbar);
+        mImageAdapter = new ImagesPagerAdapter(getSupportFragmentManager());
+
+        viewImagePager.setAdapter(mImageAdapter);
+        tabImageLayout.setupWithViewPager(viewImagePager);
+
+        viewImagePager.setOffscreenPageLimit(3);
+    }
 
 
     private void contentOfContentMain() {
@@ -222,6 +246,7 @@ public class MainActivity extends AppCompatActivity
 
     private void toolbarAndFloatingBtn() {
 
+
         /*Bundle intent = getIntent().getExtras();
         if(intent!= null){
             String data = intent.getString("wallet_balance").trim();
@@ -232,14 +257,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, " ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -259,7 +284,7 @@ public class MainActivity extends AppCompatActivity
         contentLogin = (LinearLayout) header_View.findViewById(R.id.contentLogin);
         contentLoginBtn = (Button) header_View.findViewById(R.id.contentLoginBtn);
 
-        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
 
         /**
@@ -278,6 +303,9 @@ public class MainActivity extends AppCompatActivity
         // email
         String email = user.get(SessionManager.KEY_EMAIL);
 
+        wallet = user.get(SessionManager.KEY_WALLET_BAL);
+        Log.v("Wallet", wallet+ " Hello");
+
         if(name == null){
             contentData.setVisibility(View.GONE);
             contentLogin.setVisibility(View.VISIBLE);
@@ -288,6 +316,7 @@ public class MainActivity extends AppCompatActivity
 //            lblName.setText(Html.fromHtml("<b>" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName() + "</b>"));
             lblEmail.setText(Html.fromHtml("<b>" + name + "</b>"));
             contentData.setVisibility(View.VISIBLE);
+
             contentLogin.setVisibility(GONE);
         }
         /**
@@ -322,12 +351,26 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
+        MenuItem menuItem = menu.findItem(R.id.action_balance);
+
+        /*if((session.getUserDetails().get(SessionManager.KEY_WALLET) == null) || (session.getUserDetails().get(SessionManager.KEY_WALLET) == "null")){
+            wallet = String.valueOf(0);
+        }else{
+            wallet = session.getUserDetails().get(SessionManager.KEY_WALLET);
+        }*/
+//        sessionLogin();
+        menuItem.setTitle("₹"+ wallet);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -338,16 +381,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_notifications) {
+//        if (id == R.id.action_notifications) {
+//            return true;
+        /*}else */
+        if (id == R.id.action_balance) {
             return true;
-        }else if (id == R.id.action_balance) {
+        }/*else if (id == R.id.action_search) {
             return true;
-        }else if (id == R.id.action_search) {
-            return true;
-        }else
+        }*/else
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -357,22 +403,37 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_profile) {
-            startActivity(new Intent(getApplication(), ProfileActivity.class));
+            if(session.getUserDetails().get(SessionManager.KEY_NAME) != null) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class)
+                        .putExtra("wallet_balance", wallet));
+            }else{
+                session.logoutUser();
+//                FirebaseAuth.getInstance().signOut();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
 
+                    }
+                });
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
         } else if (id == R.id.nav_refer_earn) {
             startActivity(new Intent(getApplication(), ReferAndEarnActivity.class));
 
-        } else if (id == R.id.nav_help) {
-
-        } else if (id == R.id.nav_feedback) {
-
-        } else if (id == R.id.nav_favourites){
-
-        } else if (id == R.id.nav_aboutus) {
+        }
+//        else if (id == R.id.nav_help) {
+//
+//        } else if (id == R.id.nav_feedback) {
+//
+//        } else if (id == R.id.nav_favourites){
+//
+//        }
+        else if (id == R.id.nav_aboutus) {
             startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
         } else if(id == R.id.btn_logout) {
             session.logoutUser();
-            FirebaseAuth.getInstance().signOut();
+//            FirebaseAuth.getInstance().signOut();
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
                 @Override
                 public void onResult(@NonNull Status status) {

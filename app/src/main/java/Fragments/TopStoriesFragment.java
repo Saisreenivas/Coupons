@@ -34,6 +34,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import Adapter.BestOffersAdapter;
 import Model.OfferData;
+import Utils.LoadMoreItems;
 
 import static android.view.View.GONE;
 
@@ -51,6 +52,9 @@ public class TopStoriesFragment extends Fragment {
     private View itemView;
     private ProgressBar progress;
     private ArrayList<OfferData> fullData;
+    final int page[] = {1};
+    int pageLimit = 50;
+    private boolean mIsLoading =false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +74,10 @@ public class TopStoriesFragment extends Fragment {
             bestOffersAdapter.notifyDataSetChanged();
         }else {
             progress.setVisibility(View.VISIBLE);
-            new GetDataForContent(getActivity(), progress, mRecyclerView).execute();
+//            if(page[0]==1) {
+//                setUpData(prepareData());
+//            }
+            new GetDataForContent(getActivity(), progress, mRecyclerView, page).execute();
         }
 //        setUpData(bestOffersDataList);
 
@@ -119,9 +126,32 @@ public class TopStoriesFragment extends Fragment {
 //        mLayoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false);
 //        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mLayoutManager = new LinearLayoutManager((getContext()));
+        mRecyclerView.setLayoutManager(mLayoutManager);
         bestOffersAdapter = new BestOffersAdapter(getContext(), bestOffersDataList);
         mRecyclerView.setAdapter(bestOffersAdapter);
+
+//        bestOffersAdapter.setOnLoadMoreListener(new LoadMoreItems()){
+//
+//        }
+
+        RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (mIsLoading)
+                        return;
+                    int visibleItemCount = ((LinearLayoutManager) recyclerView.getLayoutManager()).getChildCount();
+                    int totalItemCount = ((LinearLayoutManager) recyclerView.getLayoutManager()).getItemCount();
+                    int pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                    if (pastVisibleItems + visibleItemCount >= totalItemCount-pageLimit/2) {
+                        //End of list
+                        new GetDataForContent(getActivity(), progress, recyclerView, page).execute();
+                        mIsLoading = true;
+
+                }
+            }
+        };
+        mRecyclerView.addOnScrollListener(mScrollListener);
 
 
     }
@@ -136,12 +166,14 @@ public class TopStoriesFragment extends Fragment {
         private final Activity parent;
         private final ProgressBar progress;
         private final RecyclerView mRecyclerView;
+        private final int page[];
 
 
-        public GetDataForContent(Activity parent, ProgressBar progress, RecyclerView mRecyclerView) {
+        public GetDataForContent(Activity parent, ProgressBar progress, RecyclerView mRecyclerView, int[] page) {
             this.parent = parent;
             this.progress = progress;
             this.mRecyclerView = mRecyclerView;
+            this.page= page;
         }
 
         @Override
@@ -167,8 +199,9 @@ public class TopStoriesFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             try{
-                URL url = new URL("https://tools.vcommission.com/api/coupons.php?apikey=17c554a945c8fe66424fabc11c81b81aea0d635866fa279a26eb21c37b0e8e70");
+//                URL url = new URL("https://tools.vcommission.com/api/coupons.php?apikey=17c554a945c8fe66424fabc11c81b81aea0d635866fa279a26eb21c37b0e8e70");
 
+                URL url = new URL("http://couponkhajana.com/android/Coupons/vcommision_api_my_db.php?page=" + page[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000  /*milliseconds*/ );
                 conn.setConnectTimeout(15000  /*milliseconds */);
@@ -183,8 +216,9 @@ public class TopStoriesFragment extends Fragment {
 
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     publishProgress();
-                    fullData = convertStreamToString(conn.getInputStream());
+                    fullData = convertStreamToString(conn.getInputStream(), bestOffersDataList);
                     publishProgress();
+//                    bestOffersAdapter.notifyDataSetChanged();
                     return  "containsData";
 /*
                     BufferedReader in=new BufferedReader(
@@ -220,9 +254,14 @@ public class TopStoriesFragment extends Fragment {
             progress.setVisibility(GONE);
             if(result.equals("containsData")){
 //                runResultsOnUi(fullData);
-                setUpData(fullData);
+//                setUpData(fullData);
+                page[0]++;
+                if(page[0] == 2) {
+                    setUpData(fullData);
+                }
                 bestOffersAdapter.notifyDataSetChanged();
             }
+            mIsLoading = false;
             Log.v("onPostExecute2", result);
 
         }
@@ -230,8 +269,9 @@ public class TopStoriesFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private static ArrayList<OfferData> convertStreamToString(InputStream is) {
-		/*
+    private static ArrayList<OfferData> convertStreamToString(InputStream is, ArrayList<OfferData> bestOffersDataList) {
+
+        /*
 		 * To convert the InputStream to String we use the BufferedReader.readLine()
 		 * method. We iterate until the BufferedReader return null which means
 		 * there's no more data to read. Each line will appended to a StringBuilder
@@ -243,7 +283,7 @@ public class TopStoriesFragment extends Fragment {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
 
-        ArrayList<OfferData> bestOffersDataList = new ArrayList<>();
+//        bestOffersDataList = new ArrayList<>();
         JSONArray listOfOffers = new JSONArray();
         String line = null;
         JSONObject ja;
@@ -259,7 +299,7 @@ public class TopStoriesFragment extends Fragment {
 //                ja = new JSONObject(line);
 //                Log.v("jsonArrayLine", ja.getJSONArray("allOffersList").toString());
 //                listOfOffers = ja.getJSONArray();
-                for(int i = 0; i< 5; i++){
+                for(int i = 0; i< listOfOffers.length(); i++){
                     OfferData offerData = new OfferData();
                     Log.v("listOfOffers2", listOfOffers.getJSONObject(i).getString("store_name") +
                             listOfOffers.getJSONObject(i).getString("category"));
@@ -303,6 +343,7 @@ public class TopStoriesFragment extends Fragment {
             }
         }
         Log.v("StreamtoString2",bestOffersDataList.get(1).getMerchant()) ;
+        Log.v("DataAdded", String.valueOf(bestOffersDataList.size()));
         return bestOffersDataList;
     }
 

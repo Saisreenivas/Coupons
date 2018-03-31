@@ -35,13 +35,14 @@ public class TopStoriesAdapter extends RecyclerView.Adapter<TopStoriesAdapter.Vi
     private ArrayList<CategoryData> categoryDataArrayList ;
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView categoryTitle, subCat1, subCat2, subCat3, subCat4, subOff1, subOff2, subOff3, subOff4;
+        public TextView categoryTitle, categoryTitleOffers ,subCat1, subCat2, subCat3, subCat4, subOff1, subOff2, subOff3, subOff4;
         public LinearLayout cardFull;
         public ImageButton cardMore;
 
         public ViewHolder(View itemView) {
             super(itemView);
             categoryTitle = (TextView) itemView.findViewById(R.id.card_category_title);
+//            categoryTitleOffers = (TextView) itemView.findViewById(R.id.card_category_number_of_offers);
             subCat1 = (TextView) itemView.findViewById(R.id.card_category_sub1);
             subCat2 = (TextView) itemView.findViewById(R.id.card_category_sub2);
             subCat3 = (TextView) itemView.findViewById(R.id.card_category_sub3);

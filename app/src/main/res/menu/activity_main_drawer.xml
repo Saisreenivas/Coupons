@@ -18,7 +18,8 @@
             android:id="@+id/nav_refer_earn"
             android:icon="@drawable/ic_menu_refer"
             android:title="Refer &amp; Earn" />
-        <item
+    </group>
+        <!--<item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_menu_help"
             android:title="Help &amp; Support" />
@@ -36,7 +37,7 @@
         android:title="Favourites"
         android:icon="@drawable/ic_menu_favourites"
         />
-    </group>
+    </group>-->
     <item
         android:id="@+id/nav_aboutus"
         android:title="About Us" />

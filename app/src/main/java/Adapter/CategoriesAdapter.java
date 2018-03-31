@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,20 +34,22 @@ import static android.view.View.GONE;
  * Created by sai on 1/3/18.
  */
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> implements View.OnClickListener {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> /*implements View.OnClickListener */{
 
     private Context context;
     private ArrayList<CategoryData> CategoryDataList;
+    int pos;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener */{
 
-        public TextView categoryTitle, subCat1, subCat2, subCat3, subCat4, subOff1, subOff2, subOff3, subOff4;
+        public TextView categoryTitle, subCat1, subCat2, subCat3, subCat4, subOff1, subOff2, subOff3, subOff4, categoryNoOfOffers;
+
         public LinearLayout cardFull, cardOffs, cardSubs;
         public ImageView cardMore;
-
         public ViewHolder(View itemViewm) {
             super(itemViewm);
             categoryTitle = (TextView) itemViewm.findViewById(R.id.card_category_title);
+//            categoryNoOfOffers = (TextView) itemViewm.findViewById(R.id.card_category_number_of_offers);
             subCat1 = (TextView) itemViewm.findViewById(R.id.card_category_sub1);
             subCat2 = (TextView) itemViewm.findViewById(R.id.card_category_sub2);
             subCat3 = (TextView) itemViewm.findViewById(R.id.card_category_sub3);
@@ -59,8 +62,23 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             cardMore = (ImageView) itemViewm.findViewById(R.id.card_category_more);
             cardOffs = (LinearLayout) itemViewm.findViewById(R.id.cardcategory_offs);
             cardSubs = (LinearLayout) itemViewm.findViewById(R.id.card_category_subs);
+            itemViewm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, CategoryDetailsActivity.class)
+                            .putExtra("Category", CategoryDataList.get(getAdapterPosition()).getCategory())
+                            .putExtra("subCategories", CategoryDataList.get(getAdapterPosition()).getSubCategories())
+                            .putExtra("startPos", 0));
+
+                    Log.v("adapter", CategoryDataList.get(getAdapterPosition()).getCategory());
+                }
+            });
         }
 
+//        @Override
+//        public void onClick(View view) {
+//
+//        }
     }
 
     public CategoriesAdapter(Context context, ArrayList<CategoryData> CategoryDataList) {
@@ -76,23 +94,25 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         return new CategoriesAdapter.ViewHolder(itemViewm);
     }
 
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        CategoryData CategoryData = CategoryDataList.get(position);
-                String[] subCats = CategoryData.getSubCategories();
-        holder.categoryTitle.setText(CategoryData.getCategory() + " ");
-                holder.subCat1.setText(subCats[0]);
-                holder.subCat2.setText(subCats[1]);
-                holder.subCat3.setText(subCats[2]);
-                holder.subCat4.setText(subCats[3]);
-                String[] subOffers = CategoryData.getSubCategoryOffers();
+        final CategoryData categoryData = CategoryDataList.get(position);
+        pos = position;
+                String[] subCats = categoryData.getSubCategories();
+        holder.categoryTitle.setText(categoryData.getCategory() + " ");
+//        holder.categoryNoOfOffers.setText(CategoryData.getCategoryOffers() + " Offers");
+                holder.subCat1.setText(subCats[1]);
+                holder.subCat2.setText(subCats[2]);
+                holder.subCat3.setText(subCats[3]);
+                holder.subCat4.setText(subCats[4]);
+                String[] subOffers = categoryData.getSubCategoryOffers();
                 holder.subOff1.setText(subOffers[0]);
                 holder.subOff2.setText(subOffers[1]);
                 holder.subOff3.setText(subOffers[2]);
                 holder.subOff4.setText(subOffers[3]);
 
         //*
+
         holder.cardMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,15 +128,23 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
             }
         });
-        holder.cardFull.setOnClickListener(this);
-        holder.subCat1.setOnClickListener(this);
+        /*holder.cardFull.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, CategoryDetailsActivity.class)
+                        .putExtra("Category", CategoryDataList.get(pos).getCategory())
+                        .putExtra("subCategories", CategoryDataList.get(pos).getSubCategories()));
+            }
+        });*/
+/*        holder.subCat1.setOnClickListener(this);
         holder.subCat2.setOnClickListener(this);
         holder.subCat3.setOnClickListener(this);
-        holder.subCat4.setOnClickListener(this);
+        holder.subCat4.setOnClickListener(this);*/
     }
 
 
-    /*
+/*
+
         @Override
         public void onBindViewHolder(@NonNull final CategoriesAdapter.ViewHolder holder, final int position) {
             CategoryData CategoryData = CategoryDataList.get(position);
@@ -132,7 +160,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     //        holder.subOff3.setText(subOffers[2]);
     //        holder.subOff4.setText(subOffers[3]);
 
-    *//*
+    */
+
+/*
         holder.cardMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,15 +181,26 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         holder.subCat2.setOnClickListener(this);
         holder.subCat3.setOnClickListener(this);
         holder.subCat4.setOnClickListener(this);*//*
-    }*/
+
+*/
+/*
+    }*//*
+
+*/
+/*
     @Override
     public void onClick(View view) {
-
-        context.startActivity(new Intent(context, CategoryDetailsActivity.class));
+        Intent intent = new Intent(context, CategoryDetailsActivity.class);
+        intent.putExtra("data", CategoryDataList.get().getCategory());
+        intent.putExtra("subCategories", CategoryDataList.get(pos).getSubCategories());
+        context.startActivity(intent);
     }
+*/
+
 
     @Override
     public int getItemCount() {
         return CategoryDataList.size();
     }
+
 }

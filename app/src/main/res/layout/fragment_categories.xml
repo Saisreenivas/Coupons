@@ -7,7 +7,12 @@
     android:layout_width="match_parent"
     android:id="@+id/fragment2_recycler"
 
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"/>
 
-</android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:layout_below="@id/fragment2_recycler"
+        android:layout_width="match_parent"
+        android:id="@+id/prog_bar_categories"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

@@ -6,6 +6,7 @@ package Model;
 
 public class CategoryData {
     private String category;
+    private String categoryOffers;
     private String[] subCategories;
     private String[] subCategoryOffers;
 
@@ -15,8 +16,22 @@ public class CategoryData {
         this.subCategoryOffers = subCategoryOffers;
     }
 
+    public CategoryData(String category, String categoryOffers, String[] subCategories) {
+        this.category = category;
+        this.categoryOffers = categoryOffers;
+        this.subCategories = subCategories;
+    }
+
     public CategoryData() {
 
+    }
+
+    public String getCategoryOffers() {
+        return categoryOffers;
+    }
+
+    public void setCategoryOffers(String categoryOffers) {
+        this.categoryOffers = categoryOffers;
     }
 
     public String getCategory() {

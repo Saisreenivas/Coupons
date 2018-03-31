@@ -5,10 +5,11 @@
     <item android:title="Share"
         android:orderInCategory="100"
         android:id="@+id/card_offers_share"
-        app:showAsAction="never"/>
-    <item android:title="Show all Offers"
+        android:icon="@drawable/card_share"
+        app:showAsAction="always"/>
+    <!--<item android:title="Show all Offers"
         app:showAsAction="never"
         android:orderInCategory="101"
-        android:id="@+id/card_offers_show_all"/>
+        android:id="@+id/card_offers_show_all"/>-->
 
 </menu>

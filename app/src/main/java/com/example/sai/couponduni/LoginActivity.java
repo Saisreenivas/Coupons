@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -34,14 +35,14 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.auth.AuthCredential;
+//import com.google.firebase.auth.AuthResult;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.auth.GoogleAuthProvider;
+//import com.google.firebase.auth.UserProfileChangeRequest;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ImageView collapseImage;
     SignInButton googleSignIn;
     private static final int RC_SIGN_IN = 20;
-    FirebaseAuth auth;
+//    FirebaseAuth auth;
     GoogleSignInOptions options;
     private GoogleSignInApi mGoogleSignInClient;
     String idToken, name, email;
@@ -82,8 +83,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnSignUp.setOnClickListener(this);
 
         googleSignIn = (SignInButton) findViewById(R.id.google_signin);
+        TextView textView = (TextView) googleSignIn.getChildAt(0);
+        textView.setText("Sign In");
         googleSignIn.setOnClickListener(this);
-        auth  = FirebaseAuth.getInstance();
+//        auth  = FirebaseAuth.getInstance();
         configureSignIn();
 
 
@@ -111,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         txtUsername = (EditText) findViewById(R.id.txtUsername);
 //        txtPassword = (EditText) findViewById(R.id.txtPassword);
 
-        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "User Login Status: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
         // Login button
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -137,6 +140,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 name = account.getDisplayName();
                 email = account.getEmail();
 
+//                Log.v("MainLogIn", name + " " + email);
+                session.createLoginSession(name, email, "GoogleS", "49");
+                startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("wallet_balance", "49"));
+                finish();
+
+
                 /*idToken = account.getIdToken();
                 name = account.getDisplayName();
                 email = account.getEmail();
@@ -150,20 +159,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 sharedPrefManager.savePhoto(mContext, photo);
                 sharedPrefManager.saveToken(mContext, idToken);*/
 //sharedPrefManager.saveIsLoggedIn(mContext, true);
-                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+//                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 //                firebaseAuthWithGoogle(credential);
 
 //                firebaseAuthWithGoogle(credential);
             } else {
 // Google Sign In failed, update UI appropriately
                 Log.e(TAG, "Login Unsuccessful. ");
-                Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT)
-                        .show();
+//                Toast.makeText(this, "Login Unsuccessful", Toast.LENGTH_SHORT)
+//                        .show();
             }
         }
 
 
     }
+
 /*
 
     private void firebaseAuthWithGoogle(final AuthCredential credential) {
@@ -191,8 +201,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        myRef.child("users").child(UploadId).setValue(user1);
                             myRef.child(UploadId).setValue(user1);
 
+*/
 
-                            */
+
 /*UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName("Jane Q. User")
                                     .setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))
@@ -225,7 +236,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 */
 
-    private void updateProfile(FirebaseUser user, UserProfileChangeRequest profileUpdates) {
+/*    private void updateProfile(FirebaseUser user, UserProfileChangeRequest profileUpdates) {
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -233,7 +244,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d("UserProfile", "user profile updated");
                     }
                 });
-    }
+    }*/
 
 /*
     //This method creates a new user on our own Firebase database
@@ -290,10 +301,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("name", txtUsername.getText().toString().trim());
                 startActivity(intent);
 
-                finish();
+//                finish();
                 break;
             case R.id.btnSkip:
-                session.createLoginSession(null, "anroidhive@gmail.com", "Need to Log In");
+                session.createLoginSession(null, "anroidhive@gmail.com", "Need to Log In", String.valueOf(0));
 
                 // Staring MainActivity
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -305,8 +316,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, SignUpActivity.class));
                 break;
             case R.id.google_signin:
-                    signIn();
-//                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                signIn();
+//                Intent signInIntent = mGoogleSignInClient.getSignInIntent(mGoogleApiClient);
 //                startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
         }
@@ -347,7 +358,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             emailIdLayout.setErrorEnabled(true);
             emailIdLayout.setError(getString(R.string.err_msg_email));
-            txtUsername.setError(getString(R.string.err_msg_required));
+            txtUsername.setError(getString(R.string.err_email_required));
             requestFocus(txtUsername);
             return false;
         }
@@ -366,6 +377,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
     public void configureSignIn(){
 // Configure sign-in to request the user’s basic profile like name and email
         options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -382,11 +398,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }/* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, options)
                 .build();
-    }
-
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
 }

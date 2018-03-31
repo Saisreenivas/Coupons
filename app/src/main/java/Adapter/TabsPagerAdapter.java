@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import Fragments.AmazonFragment;
 import Fragments.BestOffersFragment;
 import Fragments.CategoriesFragment;
 import Fragments.TopStories2Fragment;
@@ -15,7 +16,7 @@ import Fragments.TopStoriesFragment;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
-    private String[] tabs = { "FlipKart", /*"Categories", */ "Stores", "icubes"};
+    private String[] tabs = { "FlipKart", "Categories",  "Stores", "icubes", "Amazon"};
 
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -32,19 +33,21 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         switch (position){
             case 0:
                 return new BestOffersFragment();
-/*            case 1:
-                return new CategoriesFragment();*/
             case 1:
-                return new TopStoriesFragment();
+                return new CategoriesFragment();
             case 2:
+                return new TopStoriesFragment();
+            case 3:
                 return new TopStories2Fragment();
+            case 4:
+                return new AmazonFragment();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 5;
     }
 
 

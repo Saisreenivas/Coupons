@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:id="@+id/card_merchant_view"
-        android:layout_margin="4dp"
-        android:layout_height="wrap_content">
+    android:id="@+id/card_merchant_view"
+    android:layout_margin="4dp"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <RelativeLayout
             android:background="#fff"
             android:layout_width="match_parent"
@@ -16,10 +13,9 @@
             android:layout_height="50dp"
             android:layout_margin="10dp"
             android:layout_centerVertical="true"
-            app:layout_constraintDimensionRatio="1:1"
             android:layout_width="50dp"
             android:id="@+id/card_merchant_img"
-            android:background="@drawable/ic_menu_refer"
+            android:background="@drawable/card_each_item"
             android:contentDescription="TODO" />
         <LinearLayout
             android:layout_width="wrap_content"
@@ -63,5 +59,3 @@
         </LinearLayout>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
-
-</LinearLayout>
