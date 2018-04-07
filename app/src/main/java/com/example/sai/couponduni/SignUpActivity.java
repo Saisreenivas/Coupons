@@ -49,6 +49,7 @@ import Model.User;
 import Utils.RandomString;
 
 import static android.view.View.GONE;
+import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -235,7 +236,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    private class GetDataForContent extends AsyncTask<String, Void, String> {
+    protected class GetDataForContent extends AsyncTask<String, Void, String> {
 
 
         private final int[] progr  = {40,65};
@@ -277,7 +278,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             try{
 
 
-                URL url = new URL("http://couponkhajana.com/android/Coupons/sign_up.php?username=" + email
+                URL url = new URL(CONSTANT_INITIAL_URL + "Coupons/sign_up.php?username=" + email
                         +"&password=" + password +"&referred_by=" + signUpReferralCode.getText()
                         +"&referral_code=" + random +"&wallet_balance=");
 

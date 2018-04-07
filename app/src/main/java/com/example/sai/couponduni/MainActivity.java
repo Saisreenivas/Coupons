@@ -38,6 +38,7 @@ import android.widget.Toast;
 //import com.google.android.gms.appinvite.AppInvite;
 //import com.google.android.gms.appinvite.AppInviteInvitationResult;
 //import com.google.android.gms.appinvite.AppInviteReferral;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,6 +49,7 @@ import com.google.android.gms.common.api.Status;
 //import com.google.firebase.database.DatabaseReference;
 //import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -61,6 +63,9 @@ import static android.view.View.GONE;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabLayout.OnTabSelectedListener {
 
+
+//    public static final String CONSTANT_INITIAL_URL = "http://192.168.1.105/";
+    public static final String CONSTANT_INITIAL_URL = "http://couponkhajana.com/android/";
 
     // Alert Dialog Manager
     AlertDialogManager alert = new AlertDialogManager();
@@ -355,18 +360,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        this.menu = menu;
-        MenuItem menuItem = menu.findItem(R.id.action_balance);
+        if(contentData.getVisibility() != GONE){
 
-        /*if((session.getUserDetails().get(SessionManager.KEY_WALLET) == null) || (session.getUserDetails().get(SessionManager.KEY_WALLET) == "null")){
-            wallet = String.valueOf(0);
-        }else{
-            wallet = session.getUserDetails().get(SessionManager.KEY_WALLET);
-        }*/
-//        sessionLogin();
-        menuItem.setTitle("₹"+ wallet);
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getMenuInflater().inflate(R.menu.main, menu);
+            this.menu = menu;
+            MenuItem menuItem = menu.findItem(R.id.action_balance);
+
+            /*if((session.getUserDetails().get(SessionManager.KEY_WALLET) == null) || (session.getUserDetails().get(SessionManager.KEY_WALLET) == "null")){
+                wallet = String.valueOf(0);
+            }else{
+                wallet = session.getUserDetails().get(SessionManager.KEY_WALLET);
+            }*/
+    //        sessionLogin();
+            menuItem.setTitle("₹" + wallet);
+    }
         return true;
     }
 
@@ -408,6 +416,7 @@ public class MainActivity extends AppCompatActivity
                         .putExtra("wallet_balance", wallet));
             }else{
                 session.logoutUser();
+                LoginManager.getInstance().logOut();
 //                FirebaseAuth.getInstance().signOut();
                 Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
                     @Override
@@ -433,6 +442,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), AboutUsActivity.class));
         } else if(id == R.id.btn_logout) {
             session.logoutUser();
+            LoginManager.getInstance().logOut();
 //            FirebaseAuth.getInstance().signOut();
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
                 @Override

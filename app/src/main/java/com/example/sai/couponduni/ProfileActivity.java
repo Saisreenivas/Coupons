@@ -2,8 +2,10 @@ package com.example.sai.couponduni;
 
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +21,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         session = new SessionManager(getApplicationContext());
         session.checkLogin();
@@ -40,11 +45,15 @@ public class ProfileActivity extends AppCompatActivity {
         profileWithdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Integer.valueOf(session.getUserDetails().get(SessionManager.KEY_WALLET_BAL)) >=0) {
+                if(Integer.valueOf(session.getUserDetails().get(SessionManager.KEY_WALLET_BAL)) >0) {
                     startActivity(new Intent(ProfileActivity.this, AccountDetailsActivity.class));
                 }else{
-                    Toast.makeText(getApplicationContext(),
-                            "Minimum Wallet Balance Required to withdraw...", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                    builder.setTitle("Withdrawal Balance is Low");
+                    builder.setMessage("Balance in your account must be greater than 0 to withdraw");
+                    builder.show();
+//                    Toast.makeText(getApplicationContext(),
+//                            "Minimum Wallet Balance Required to withdraw...", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -57,5 +66,17 @@ public class ProfileActivity extends AppCompatActivity {
 
 //            }
 //        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

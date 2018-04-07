@@ -2,11 +2,18 @@ package com.example.sai.couponduni; /**
  * Created by sai on 28/2/18.
  */
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,15 +23,25 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
@@ -33,6 +50,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 //import com.google.firebase.auth.AuthCredential;
@@ -44,11 +63,29 @@ import com.google.android.gms.tasks.Task;
 //import com.google.firebase.database.DatabaseReference;
 //import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import Model.User;
+import Utils.RandomString;
 
 import static android.content.ContentValues.TAG;
+import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
+import static android.view.View.GONE;
+import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -58,9 +95,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     GoogleApiClient mGoogleApiClient;
 
     // login button
-    Button btnLogin, btnSkip, passLogin, btx, btnSignUp;
+    Button btnLogin, btnSkip, passLogin, btx, btnSignUp/*, unnecessaryLogout*/;
 
     SessionManager session;
+    ProgressBar progressBarAuth;
 
     RelativeLayout userNameLayout, passwordLayout;
     TextInputLayout emailIdLayout;
@@ -72,6 +110,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     GoogleSignInOptions options;
     private GoogleSignInApi mGoogleSignInClient;
     String idToken, name, email;
+    private static final String specialPassword = "z6Wnf456Ond67GNEl114kjd45Fg";
+    boolean special_referral = false;
+    String referred_by = "";
+
+    //Facebook Login details
+    CallbackManager callbackManager;
+    private static final String EMAIL = "email";
+    LoginButton loginButton;
 
 
     @Override
@@ -88,8 +134,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         googleSignIn.setOnClickListener(this);
 //        auth  = FirebaseAuth.getInstance();
         configureSignIn();
+        facebookSignIn();
 
-
+        progressBarAuth = (ProgressBar) findViewById(R.id.auth_log_in_progress);
 
         /*FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users/").push();
@@ -123,10 +170,65 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnLogin.setOnClickListener(this);
         btnSkip.setOnClickListener(this);
         session = new SessionManager(getApplicationContext());
+
+//        unnecessaryLogout= (Button) findViewById(R.id.unnecessary_logout);
+//        unnecessaryLogout.setOnClickListener(this);
+    }
+
+    private void facebookSignIn() {
+        loginButton = (LoginButton) findViewById(R.id.facebook_signin);
+        loginButton.setReadPermissions(Arrays.asList(EMAIL));
+
+
+        callbackManager = CallbackManager.Factory.create();
+        // If you are using in a fragment, call loginButton.setFragment(this);
+
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                Log.v("LoginActivity", response.toString());
+
+                                // Application code
+                                try {
+                                    String email = object.getString("email");
+                                    progressBarAuth.setVisibility(View.VISIBLE);
+                                    new GetDataForContent(getParent(), progressBarAuth ,email, specialPassword).executeOnExecutor(THREAD_POOL_EXECUTOR);
+//                                    String birthday = object.getString("birthday"); // 01/31/1980 format
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+                // App code
+            }
+
+            @Override
+            public void onCancel() {
+                LoginManager.getInstance().logOut();
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
 
@@ -141,9 +243,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 email = account.getEmail();
 
 //                Log.v("MainLogIn", name + " " + email);
-                session.createLoginSession(name, email, "GoogleS", "49");
-                startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("wallet_balance", "49"));
-                finish();
+                progressBarAuth.setVisibility(View.VISIBLE);
+                new GetDataForContent(getParent(), progressBarAuth ,email, specialPassword).executeOnExecutor(THREAD_POOL_EXECUTOR);
+
+//                session.createLoginSession(name, email, "GoogleS", "49");
+//                startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra("wallet_balance", "49"));
+//                finish();
 
 
                 /*idToken = account.getIdToken();
@@ -173,6 +278,251 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     }
+
+
+    private class GetDataForContent extends AsyncTask<String, Void, String> {
+
+
+        private final int[] progr = {40, 65};
+        private int index;
+
+        private final Activity parent;
+        private final ProgressBar progress;
+        private final String email, password;
+        AlertDialog.Builder builder;
+
+
+        public GetDataForContent(Activity activity, ProgressBar progress, String emailId, String password) {
+            this.parent = activity;
+            this.progress = progress;
+
+            this.email = emailId;
+            this.password = password;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            progress.incrementProgressBy(progr[index]);
+            ++index;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            builder = new AlertDialog.Builder(LoginActivity.this);
+            int max = 0;
+            for (final int p : progr) {
+                max += p;
+            }
+            progress.setMax(max);
+            index = 0;
+
+        }
+
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        protected String doInBackground(String... strings) {
+
+            try {
+                String easy = RandomString.digits + "ACEFGHJKLMNPQRUVWXYabcdefhijkprstuvwx";
+                RandomString randomString = new RandomString(6, new SecureRandom(), easy );
+
+//                18.217.104.249
+                URL url = new URL(CONSTANT_INITIAL_URL + "Coupons/auth_sign_in.php?username="
+                        + email + "&login_via=" + specialPassword + "&referral_code=" + randomString.nextString());
+                if(special_referral){
+                    url = new URL(CONSTANT_INITIAL_URL + "Coupons/auth_sign_in.php?username="
+                            + email + "&login_via=" + specialPassword + "&referral_code=" + randomString.nextString()
+                            + "&sp_referral="+ referred_by);
+//                    URL random = new URL(randomString.nextString());
+//                    url = url + "&sp_referral=";
+                    special_referral = false;
+                }
+
+                Log.v("LogAuth", url.toString());
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000/*milliseconds*/);
+                conn.setConnectTimeout(15000/*milliseconds */);
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+
+                final StringBuilder output = new StringBuilder("Request URL " + url);
+                output.append(System.getProperty("line.separator") + "Response Code " + responseCode);
+                output.append(System.getProperty("line.separator") + "Type " + "GET");
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+//                    publishProgress();
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuilder sb = new StringBuilder();
+
+                    User user = new User();
+                    JSONArray listOfOffers = new JSONArray();
+                    String line = null;
+                    JSONObject ja;
+
+//        OfferData offerData = new OfferData();
+                    Bitmap bmp;
+                    try {
+                        while ((line = reader.readLine()) != null) {
+                            ja = new JSONObject(line);
+                            Log.v("jsonObject", ja.toString());
+//                            Log.v("jsonArrayLine", ja.getJSONArray("wallet_balance").toString());
+//                            listOfOffers = ja.getJSONArray("wallet_balance");
+
+
+                            //if it is a new user, ask to enter a referral code
+                            if (Objects.equals(ja.getString("success"), "new_user")) {
+                                Log.v("jsonObject", ja.getString("success"));
+                                return ja.getString("success");
+                            }
+                            if((ja.getBoolean("success"))){
+                                return "'success=" + ja.getString("success") + "'referral_code'"
+                                        + ja.getString("referral_code") + "'wallet_balance'" + ja.getString("wallet_balance")+ "'";
+                            }
+                            /*if(ja.getBoolean("success") && (ja.getString("wallet_balance")+" ") !=null){
+//                                progress.setVisibility(GONE);
+                                referral_code = ja.getString("referral_code");
+                                Log.v("LogInReferral", referral_code);
+
+                                return ja.getString("wallet_balance");
+                            }
+                            else{
+                                return String.valueOf(0);
+                            }*/
+
+                        }
+                    } catch (IOException e) {
+                        Log.v("LogInIO", e.getMessage());
+                    } catch (JSONException e) {
+                        Log.v("LogINJSON", e.getMessage());
+                    } finally {
+                        try {
+                            conn.getInputStream().close();
+                        } catch (IOException e) {
+                            Log.v("FinallyLogSess", e.getMessage());
+                        }
+                    }
+                    Log.v("StreamtoString", "Data Unknown");
+
+
+//                    publishProgress();
+                    return String.valueOf(0);
+/*
+                    BufferedReader in=new BufferedReader(
+                            new InputStreamReader(
+                                    conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+                    String line="";
+                    while((line = in.readLine()) != null) {
+
+                        sb.append(line);
+                        break;
+                    }
+*/
+/*
+
+                    in.close();
+                    return sb.toString();
+*/
+
+
+                } else {
+                    Log.v("LogInHttpNotOK", "false : " + responseCode);
+                    return String.valueOf(0);
+                }
+            } catch (Exception e) {
+                Log.v("LogIntryURL", "false : " + e.getMessage());
+//                Toast.makeText(parent, e.getMessage(), Toast.LENGTH_LONG).show();
+//                e.printStackTrace();
+                return String.valueOf(0);
+            }
+
+        }
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(final String result) {
+            progress.setVisibility(GONE);
+
+            Log.v("LogAuth", result);
+            int finalres;
+            if (Objects.equals(result, "new_user")) {
+                LayoutInflater inflater = LoginActivity.this.getLayoutInflater();
+//
+                final View dialogView = inflater.inflate(R.layout.dialog_referral_sign_up, null);
+                builder.setView(dialogView);
+                builder.setTitle("Earn Referral Bonus");
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.v("LogAuth", "Positive");
+                        special_referral = true;
+                        EditText referred_by_data = (EditText) dialogView.findViewById(R.id.sp_referred_by);
+                        referred_by = referred_by_data.getText().toString();
+                        new GetDataForContent(getParent(), progressBarAuth ,email, specialPassword).executeOnExecutor(THREAD_POOL_EXECUTOR);
+                    }
+                });
+                builder.setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        new GetDataForContent(parent, progressBarAuth ,email, specialPassword).executeOnExecutor(THREAD_POOL_EXECUTOR);
+                        Log.v("LogAuth", "Negative");
+                        special_referral = true;
+//                        EditText referred_by_data = (EditText) dialogView.findViewById(R.id.sp_referred_by);
+                        referred_by = "";
+                        new GetDataForContent(getParent(), progressBarAuth ,email, specialPassword).executeOnExecutor(THREAD_POOL_EXECUTOR);
+//                        new SignUpActivity.GetDataForContent(getParent(), progressBarAuth ,email, password, random).execute();
+                    }
+                });
+
+                builder.show();
+
+            }
+
+            if(result.contains("success=true")){
+                String[] resultme = result.split("'");
+                Log.v("LogAuth", Arrays.toString(resultme));
+                session.createLoginSession(email, password, resultme[3], resultme[5]);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+            /*if(result != String.valueOf(0)) {
+                progress.setVisibility(GONE);
+//                runResultsOnUi(fullData);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                if(result == "null" || result == null){
+                    finalres = 0;
+                    intent.putExtra("wallet_balance", finalres);
+                    session.createLoginSession(email, password, referral_code, String.valueOf(finalres));
+                    Toast.makeText(LoginActivity.this, "Wallet Balance: " + finalres, Toast.LENGTH_LONG).show();
+                }else{
+                    finalres = Integer.parseInt(result);
+                    intent.putExtra("wallet_balance", finalres);
+                    session.createLoginSession(email, password, referral_code, String.valueOf(finalres));
+                    Log.v("Wallet", finalres + " : Wallet Balance");
+                    Toast.makeText(LoginActivity.this, "Wallet Balance: " + finalres, Toast.LENGTH_LONG).show();
+                }
+//                intent.putExtra("wallet_balance", result + " ");
+
+                startActivity(intent);
+                finish();
+                Log.v("onPostExecute", result + " Wallet Balance ");
+
+//                setUpData(fullData);
+//                bestOffersAdapter.notifyDataSetChanged();
+            } else{
+                progress.setVisibility(GONE);
+                Toast.makeText(LoginActivity.this, "sign in failed...", Toast.LENGTH_LONG).show();
+            }
+
+        }*/
+
+        }
 
 /*
 
@@ -288,7 +638,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }*/
-
+    }
 
     @Override
     public void onClick(View view) {
@@ -320,6 +670,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                Intent signInIntent = mGoogleSignInClient.getSignInIntent(mGoogleApiClient);
 //                startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
+          /*  case R.id.unnecessary_logout:
+                session.logoutUser();
+//                FirebaseAuth.getInstance().signOut();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+
+                    }
+                });
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                break;*/
+
         }
 
     }

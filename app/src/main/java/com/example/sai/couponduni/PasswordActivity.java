@@ -47,6 +47,7 @@ import Model.User;
 
 import static android.os.AsyncTask.THREAD_POOL_EXECUTOR;
 import static android.view.View.GONE;
+import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
 
 public class PasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -416,7 +417,7 @@ public class PasswordActivity extends AppCompatActivity implements View.OnClickL
             try{
 
 //                18.217.104.249
-                URL url = new URL("http://couponkhajana.com/android/Coupons/sign_in.php?username=" + email +"&password=" + password);
+                URL url = new URL( CONSTANT_INITIAL_URL + "Coupons/sign_in.php?username=" + email +"&password=" + password);
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000/*milliseconds*/);

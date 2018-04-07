@@ -1,8 +1,12 @@
 package com.example.sai.couponduni;
 
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
 
 public class AboutUsActivity extends AppCompatActivity {
 
@@ -13,6 +17,10 @@ public class AboutUsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        TextView textView = (TextView) findViewById(R.id.text_about_us);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            textView.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+        }
 
     }
 
