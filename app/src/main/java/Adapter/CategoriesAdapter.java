@@ -39,16 +39,17 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     private Context context;
     private ArrayList<CategoryData> CategoryDataList;
     int pos;
+    ArrayList<Integer> imageLists;
 
     public class ViewHolder extends RecyclerView.ViewHolder /*implements View.OnClickListener */{
 
         public TextView categoryTitle, subCat1, subCat2, subCat3, subCat4, subOff1, subOff2, subOff3, subOff4, categoryNoOfOffers;
-
         public LinearLayout cardFull, cardOffs, cardSubs;
-        public ImageView cardMore;
+        public ImageView cardMore,categoryTitleImage;
         public ViewHolder(View itemViewm) {
             super(itemViewm);
             categoryTitle = (TextView) itemViewm.findViewById(R.id.card_category_title);
+            categoryTitleImage = (ImageView) itemViewm.findViewById(R.id.card_list_img);
 //            categoryNoOfOffers = (TextView) itemViewm.findViewById(R.id.card_category_number_of_offers);
             subCat1 = (TextView) itemViewm.findViewById(R.id.card_category_sub1);
             subCat2 = (TextView) itemViewm.findViewById(R.id.card_category_sub2);
@@ -81,9 +82,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 //        }
     }
 
-    public CategoriesAdapter(Context context, ArrayList<CategoryData> CategoryDataList) {
+    public CategoriesAdapter(Context context, ArrayList<CategoryData> CategoryDataList, ArrayList<Integer> imageIconsList) {
         this.context = context;
         this.CategoryDataList = CategoryDataList;
+        this.imageLists = imageIconsList;
     }
 
     @Override
@@ -100,6 +102,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         pos = position;
                 String[] subCats = categoryData.getSubCategories();
         holder.categoryTitle.setText(categoryData.getCategory() + " ");
+        holder.categoryTitleImage.setImageResource(imageLists.get(position));
 //        holder.categoryNoOfOffers.setText(CategoryData.getCategoryOffers() + " Offers");
                 holder.subCat1.setText(subCats[1]);
                 holder.subCat2.setText(subCats[2]);

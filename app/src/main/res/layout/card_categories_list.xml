@@ -15,12 +15,11 @@
                 android:id="@+id/card_category_basic_data"
                 android:layout_height="wrap_content">
                 <ImageButton
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:id="@+id/card_list_img"
-                    android:background="@drawable/card_categories"
-                    android:padding="10dp"
-                    android:layout_margin="10dp"
+                    android:src="@drawable/card_categories"
+                    android:background="#fff"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +56,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:gravity="center"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="50dp"
                     android:textColor="#545454"
                     android:padding="4dp"
                     android:id="@+id/card_category_sub1"
@@ -68,8 +67,7 @@
                 <TextView
                     android:padding="4dp"
                     android:id="@+id/card_category_sub2"
-                    android:gravity="center"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="50dp"
                     android:textColor="#545454"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,8 +76,7 @@
                 <TextView
                     android:padding="4dp"
                     android:id="@+id/card_category_sub3"
-                    android:gravity="center"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="50dp"
                     android:textColor="#545454"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -88,8 +85,7 @@
                 <TextView
                     android:padding="4dp"
                     android:id="@+id/card_category_sub4"
-                    android:gravity="center"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="50dp"
                     android:textColor="#545454"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

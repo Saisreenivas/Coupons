@@ -39,6 +39,7 @@ import Adapter.BestOffersAdapter;
 import Model.OfferData;
 
 import static android.view.View.GONE;
+import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
 
 /**
  * Created by sai on 1/3/18.
@@ -203,7 +204,7 @@ public class BestOffersFragment extends Fragment {
             try{
 //                URL url = new URL("https://affiliate-api.flipkart.net/affiliate/offers/v1/all/json");
 
-                URL url = new URL("http://couponkhajana.com/android/Coupons/flipkart_api_my_db.php?page="+ page[0]);
+                URL url = new URL(CONSTANT_INITIAL_URL + "Coupons/flipkart_api_my_db.php?page="+ page[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000  /*milliseconds*/ );
                 conn.setConnectTimeout(15000  /*milliseconds */);
@@ -306,18 +307,11 @@ public class BestOffersFragment extends Fragment {
                     offerData.setBasicDescription(listOfOffers.getJSONObject(i).getString("description"));
                     offerData.setCategory(listOfOffers.getJSONObject(i).getString("category"));
                     offerData.setCashBackPercentage(listOfOffers.getJSONObject(i).getString("availability"));
-//                    URL url = new URL(listOfOffers.getJSONObject(i).getJSONArray("imageUrls").getJSONObject(1).getString("url"));
                     URL url = new URL(listOfOffers.getJSONObject(i).getString("image_url"));
                     bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                    bmp = BitmapFactory.decodeResource(R.drawable.a1_fashion);
                     offerData.setImg(bmp);
                     offerData.setActivateUrl(listOfOffers.getJSONObject(i).getString("url"));
-//                    offerData.setImgUrl(listOfOffers.getJSONObject(i).getJSONArray("imageUrls").getJSONObject(1).getInt("url"));
-//                    for(int j=0; i< listOfOffers.getJSONObject(i).getJSONObject("imageUrls").length();i++) {
-//                        if (Objects.equals(listOfOffers.getJSONObject(i).getJSONObject("imageUrls").getString("resolutionType"), "low")) {
-//                            offerData.setImgUrl(listOfOffers.getJSONObject(i).getJSONObject("imageUrls").getString("url"));
-//                        }
-//                    }
-
                     bestOffersDataList.add(offerData);
                 }
 

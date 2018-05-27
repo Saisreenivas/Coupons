@@ -1,12 +1,16 @@
 package Fragments;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.sai.couponduni.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,9 +35,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -45,28 +49,19 @@ import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
  * Created by sai on 1/3/18.
  */
 
-public class AmazonFragment extends Fragment {
+public class OptiFragment extends Fragment {
 
-    RecyclerView mRecyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
-    BestOffersAdapter bestOffersAdapter;
-    ProgressBar progress;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private BestOffersAdapter bestOffersAdapter;
 
-    ArrayList<OfferData> bestOffersDataList = new ArrayList<>();
-
-    ArrayList<OfferData> fullData;
-    //    final int page[] = {1};
-    final int page[] = {1};
-    int pageLimit = 50;
-    private boolean mIsLoading =false;
-
-    Handler mHandler = new Handler();
+    private ArrayList<OfferData> bestOffersDataList = new ArrayList<>();
     private View itemView;
-    //    private static final String TAG = "MainActivity";
-    private static final String URL = "https://dl.affiliate-api.flipkart.net/affiliate/offers/v1/all/json";
-    private boolean isRunning = true;
-
-//    private boolean mIsLoading= false;
+    private ProgressBar progress;
+    private ArrayList<OfferData> fullData;
+    final int page[] = {1};
+    int pageLimit = 30;
+    private boolean mIsLoading =false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,26 +71,27 @@ public class AmazonFragment extends Fragment {
         // Calling the RecyclerView
         mRecyclerView = (RecyclerView) itemView.findViewById(R.id.fragment1_recycler);
         mRecyclerView.setHasFixedSize(true);
+
         progress = (ProgressBar) itemView.findViewById(R.id.progressBar);
 
 //        bestOffersDataList = prepareData();
-
-//        setUpData(bestOffersDataList);
-
-//        bestOffersAdapter.notifyDataSetChanged();
-
-        ;
-
 
         if(bestOffersDataList.size()>=1){
             setUpData(bestOffersDataList);
             bestOffersAdapter.notifyDataSetChanged();
         }else {
             progress.setVisibility(View.VISIBLE);
+//            if(page[0]==1) {
+//                setUpData(prepareData());
+//            }
             new GetDataForContent(getActivity(), progress, mRecyclerView, page).execute();
         }
+//        setUpData(bestOffersDataList);
+
+//        bestOffersAdapter.notifyDataSetChanged();
         return itemView;
     }
+
 
     private ArrayList<OfferData> prepareData() {
         bestOffersDataList =new ArrayList<>();
@@ -137,25 +133,27 @@ public class AmazonFragment extends Fragment {
 //        mLayoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false);
 //        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mLayoutManager = new LinearLayoutManager(getContext());
+        mLayoutManager = new LinearLayoutManager((getContext()));
         mRecyclerView.setLayoutManager(mLayoutManager);
         bestOffersAdapter = new BestOffersAdapter(getContext(), bestOffersDataList);
-        bestOffersAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(bestOffersAdapter);
 
+//        bestOffersAdapter.setOnLoadMoreListener(new LoadMoreItems()){
+//
+//        }
 
         RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (mIsLoading)
-                    return;
-                int visibleItemCount = ((LinearLayoutManager) recyclerView.getLayoutManager()).getChildCount();
-                int totalItemCount = ((LinearLayoutManager) recyclerView.getLayoutManager()).getItemCount();
-                int pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-                if (pastVisibleItems + visibleItemCount >= totalItemCount-pageLimit/2) {
-                    //End of list
-                    new GetDataForContent(getActivity(), progress, recyclerView, page).execute();
-                    mIsLoading = true;
+                    if (mIsLoading)
+                        return;
+                    int visibleItemCount = ((LinearLayoutManager) recyclerView.getLayoutManager()).getChildCount();
+                    int totalItemCount = ((LinearLayoutManager) recyclerView.getLayoutManager()).getItemCount();
+                    int pastVisibleItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                    if (pastVisibleItems + visibleItemCount >= totalItemCount-pageLimit/2) {
+                        //End of list
+                        new GetDataForContent(getActivity(), progress, recyclerView, page).execute();
+                        mIsLoading = true;
 
                 }
             }
@@ -163,7 +161,9 @@ public class AmazonFragment extends Fragment {
         mRecyclerView.addOnScrollListener(mScrollListener);
 
 
+
     }
+
 
     private class GetDataForContent extends AsyncTask<String, Void, String> {
 
@@ -174,7 +174,8 @@ public class AmazonFragment extends Fragment {
         private final Activity parent;
         private final ProgressBar progress;
         private final RecyclerView mRecyclerView;
-        private final int[] page;
+        private final int page[];
+
 
         public GetDataForContent(Activity parent, ProgressBar progress, RecyclerView mRecyclerView, int[] page) {
             this.parent = parent;
@@ -185,6 +186,7 @@ public class AmazonFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
             progress.incrementProgressBy(progr[index]);
             ++index;
         }
@@ -205,15 +207,13 @@ public class AmazonFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             try{
-//                URL url = new URL("https://affiliate-api.flipkart.net/affiliate/offers/v1/all/json");
+//                URL url = new URL("https://tools.vcommission.com/api/coupons.php?apikey=17c554a945c8fe66424fabc11c81b81aea0d635866fa279a26eb21c37b0e8e70");
 
-                URL url = new URL(CONSTANT_INITIAL_URL + "Coupons/icubes_api_my_db.php?page="+ page[0]+"&company=amazon");
+                URL url = new URL(CONSTANT_INITIAL_URL + "Coupons/opti_api_my_db.php?page=" + page[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000  /*milliseconds*/ );
                 conn.setConnectTimeout(15000  /*milliseconds */);
                 conn.setRequestMethod("GET");
-//                conn.setRequestProperty("Fk-Affiliate-Id", "komalvash");
-//                conn.setRequestProperty("Fk-Affiliate-Token", "7c6e0e21eac043039163b4c5fb07a052");
 
                 int responseCode=conn.getResponseCode();
 
@@ -223,8 +223,9 @@ public class AmazonFragment extends Fragment {
 
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     publishProgress();
-                    fullData = convertStreamToString(conn.getInputStream(), bestOffersDataList);
+                    fullData = convertStreamToString(conn.getInputStream(), bestOffersDataList, parent);
                     publishProgress();
+//                    bestOffersAdapter.notifyDataSetChanged();
                     return  "containsData";
 /*
                     BufferedReader in=new BufferedReader(
@@ -244,39 +245,40 @@ public class AmazonFragment extends Fragment {
 
                 }
                 else {
-                    Log.v("False" , "false : " + responseCode);
+                    Log.v("False2" , "false : " + responseCode);
                     return "false : " + responseCode;
                 }
             }
             catch(Exception e){
-                Log.v("Exception-try/catch" , "false : " + e.getMessage());
+                Log.v("Exception-try/catch2" , "false : " + e.getMessage());
                 return "try/catch : " + e.getMessage();
             }
 
         }
         @Override
         protected void onPostExecute(final String result) {
+            progress.setProgress(100);
             progress.setVisibility(GONE);
             if(result.equals("containsData")){
 //                runResultsOnUi(fullData);
 //                setUpData(fullData);
                 page[0]++;
-                Log.v("pageNumber", page[0]+" ");
                 if(page[0] == 2) {
                     setUpData(fullData);
                 }
                 bestOffersAdapter.notifyDataSetChanged();
             }
             mIsLoading = false;
-            Log.v("onPostExecute", result);
+            Log.v("onPostExecute2", result);
 
         }
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private static ArrayList<OfferData> convertStreamToString(InputStream is, ArrayList<OfferData> bestOffersDataList) {
-		/*
+    private static ArrayList<OfferData> convertStreamToString(InputStream is, ArrayList<OfferData> bestOffersDataList, Context context) {
+
+        /*
 		 * To convert the InputStream to String we use the BufferedReader.readLine()
 		 * method. We iterate until the BufferedReader return null which means
 		 * there's no more data to read. Each line will appended to a StringBuilder
@@ -288,34 +290,37 @@ public class AmazonFragment extends Fragment {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
 
-//        ArrayList<OfferData> bestOffersDataList = new ArrayList<>();
+//        bestOffersDataList = new ArrayList<>();
         JSONArray listOfOffers = new JSONArray();
         String line = null;
-        JSONArray ja;
+        JSONObject ja;
 //        OfferData offerData = new OfferData();
         Bitmap bmp;
         try {
             while ((line = reader.readLine()) != null) {
-                ja = new JSONArray(line);
 
+                listOfOffers = new JSONArray(line);
+                Log.v("jsonArrayLine2", listOfOffers.getJSONObject(1).toString() +
+                                                " " + listOfOffers.length());
+
+//                ja = new JSONObject(line);
 //                Log.v("jsonArrayLine", ja.getJSONArray("allOffersList").toString());
-//                listOfOffers = ja.getJSONArray("allOffersList");
-                listOfOffers = ja;
-                for(int i=0;i< listOfOffers.length(); i++){
-                    OfferData offerData = new OfferData();
-//                    Log.v("listOfOffers", listOfOffers.getJSONObject(i).getString("title") +
-//                            listOfOffers.getJSONObject(i).getString("description"));
+//                listOfOffers = ja.getJSONArray();
+                for(int i = 0; i< listOfOffers.length(); i++){
+                    final OfferData offerData = new OfferData();
+                    Log.v("listOfOffers2", listOfOffers.getJSONObject(i).getString("store_name") +
+                            listOfOffers.getJSONObject(i).getString("category"));
 
-//                    OfferData offerData = new OfferData();
-                    Log.v("listOfOffers", listOfOffers.getJSONObject(i).getString("Campaign_Name") +
-                            listOfOffers.getJSONObject(i).getString("Category"));
-
-                    offerData.setMerchant(listOfOffers.getJSONObject(i).getString("Title"));
-                    offerData.setBasicDescription(listOfOffers.getJSONObject(i).getString("Description"));
-                    Log.v("dataSet3", "merchant and descriptionset");
-                    offerData.setCategory(listOfOffers.getJSONObject(i).getString("Category"));
-                    offerData.setCashBackPercentage("LIVE");
-                    offerData.setActivateUrl(listOfOffers.getJSONObject(i).getString("Tracking_URL"));
+                    offerData.setMerchant(listOfOffers.getJSONObject(i).getString("store_name"));
+                    offerData.setBasicDescription(listOfOffers.getJSONObject(i).getString("category"));
+                    offerData.setCategory(listOfOffers.getJSONObject(i).getString("offer_name"));
+                    offerData.setCashBackPercentage(listOfOffers.getJSONObject(i).getString("coupon_title"));
+                    Log.v("offerData2", listOfOffers.getJSONObject(i).getString("store_image"));
+//                    URL url = new URL(listOfOffers.getJSONObject(i).getString("store_image"));
+//                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                    bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                    offerData.setImg(bmp);
+                    offerData.setActivateUrl(listOfOffers.getJSONObject(i).getString("store_link"));
 //                    offerData.setImgUrl(listOfOffers.getJSONObject(i).getJSONArray("imageUrls").getJSONObject(1).getInt("url"));
 //                    for(int j=0; i< listOfOffers.getJSONObject(i).getJSONObject("imageUrls").length();i++) {
 //                        if (Objects.equals(listOfOffers.getJSONObject(i).getJSONObject("imageUrls").getString("resolutionType"), "low")) {
@@ -335,74 +340,18 @@ public class AmazonFragment extends Fragment {
 //                Log.v("StreamtoString", line+" Hello");
             }
         } catch (IOException e) {
-            Log.v("StreamtoString", e.getMessage());
+            Log.v("StreamtoString2", e.getMessage());
         } catch (JSONException e) {
-            Log.v("JsonError",  e.getMessage());
+            Log.v("JsonError2",  e.getMessage());
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                Log.v("StreamtoString", e.getMessage());
+                Log.v("StreamtoString2", e.getMessage());
             }
         }
-        Log.v("StreamtoString",bestOffersDataList.get(1).getMerchant()) ;
-        Log.v("DataAdded1", bestOffersDataList.size()+ " ");
+        Log.v("StreamtoString2",bestOffersDataList.get(1).getMerchant()) ;
+        Log.v("DataAdded", String.valueOf(bestOffersDataList.size()));
         return bestOffersDataList;
-    }
-
-
-
-
-    private void runResultsOnUi(final ArrayList<OfferData> result) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                while (isRunning) {
-                    try {
-                        // Thread.sleep(10000);
-                        mHandler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-
-                                setUpData(result);
-                                bestOffersAdapter.notifyDataSetChanged();
-                                // TODO Auto-generated method stub
-                                // Write your code here to update the UI.
-                            }
-                        });
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                    }
-                }
-            }
-        }).start();
-    }
-
-
-    public String GetPostDataForContent(JSONObject params) throws Exception{
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        Iterator<String> itr = params.keys();
-
-        while(itr.hasNext()){
-
-            String key= itr.next();
-            Object value = params.get(key);
-
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(key, "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
-            Log.v("GetPostDataForContent", result+ " ");
-
-        }
-        return result.toString();
     }
 }

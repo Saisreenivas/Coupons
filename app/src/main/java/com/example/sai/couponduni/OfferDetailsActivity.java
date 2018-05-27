@@ -25,7 +25,7 @@ public class OfferDetailsActivity extends AppCompatActivity implements View.OnCl
     TextView offerDetailsData;
     Bundle extras;
     Button activateDeal;
-    String categoryName, descriptionData, cashbackPercentage, companyName;
+    String categoryName, descriptionData, cashbackPercentage, companyName, activateUrlLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,7 @@ public class OfferDetailsActivity extends AppCompatActivity implements View.OnCl
         descriptionData = extras.getString("description");
         cashbackPercentage = extras.getString("cashBackPercent");
         companyName =extras.getString("merchantName");
+        activateUrlLink = extras.getString("activateUrl");
 
         cardMerchantImg.setImageBitmap((Bitmap) extras.get("merchantImg"));
         merchantName.setText(extras.getString("merchantName"));
@@ -96,8 +97,8 @@ public class OfferDetailsActivity extends AppCompatActivity implements View.OnCl
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-                        companyName + " "+ categoryName
-                                + " "  +descriptionData);
+                        "Check out this amazing offer: " + companyName + " "+ categoryName
+                                + " "  +descriptionData + " " + activateUrlLink);
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this" +
                         " amazing offer");
                 startActivity(Intent.createChooser(sharingIntent, "Share using"));

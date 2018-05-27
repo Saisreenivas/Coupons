@@ -136,8 +136,9 @@ public class BestOffersAdapter extends RecyclerView.Adapter<BestOffersAdapter.Vi
                 Intent sharingIntent = new Intent(Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-                        offerDataList.get(position).getMerchant() + " "
-                                +offerDataList.get(position).getBasicDescription());
+                        "Check out this amazing offer: " + offerDataList.get(position).getMerchant() + " "
+                                +offerDataList.get(position).getBasicDescription() + " "
+                                + offerDataList.get(position).getActivateUrl());
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this" +
                         "amazing offer");
                 context.startActivity(Intent.createChooser(sharingIntent, "Share using"));

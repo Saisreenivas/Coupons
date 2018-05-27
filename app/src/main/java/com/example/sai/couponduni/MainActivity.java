@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabLayout.OnTabSelectedListener {
 
 
-//    public static final String CONSTANT_INITIAL_URL = "http://192.168.1.105/";
+//    public static final String CONSTANT_INITIAL_URL = "http://192.168.1.104/";
     public static final String CONSTANT_INITIAL_URL = "http://couponkhajana.com/android/";
 
     // Alert Dialog Manager

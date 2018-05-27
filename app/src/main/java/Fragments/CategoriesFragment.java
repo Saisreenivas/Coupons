@@ -37,6 +37,7 @@ import Model.CategoryData;
 import Model.OfferData;
 
 import static android.view.View.GONE;
+import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
 
 /**
  * Created by sai on 1/3/18.
@@ -49,6 +50,8 @@ public class CategoriesFragment extends Fragment {
     CategoriesAdapter categoriesAdapter;
 
     ArrayList<CategoryData> categoriesDataList = new ArrayList<>();
+    ArrayList<Integer> catImageLists = new ArrayList<>();
+
     private View itemView;
     ProgressBar progressBar;
 
@@ -78,6 +81,24 @@ public class CategoriesFragment extends Fragment {
 //        setUpData(categoriesDataList);
 
         return itemView;
+    }
+
+    private ArrayList<Integer> catLists(){
+//            ArrayList<int> catImagesList = new ArrayList<>();
+        catImageLists = new ArrayList<>();
+        catImageLists.add(R.drawable.a1_fashion);
+        catImageLists.add(R.drawable.a2_food_and_dining);
+        catImageLists.add(R.drawable.a3_travel);
+        catImageLists.add(R.drawable.a4_mobile_and_tablet);
+        catImageLists.add(R.drawable.a5_beauty_and_health);
+        catImageLists.add(R.drawable.a6_recharge);
+        catImageLists.add(R.drawable.a7_computers_laptops_and_gaming);
+        catImageLists.add(R.drawable.a8_appliances);
+        catImageLists.add(R.drawable.a9_home_furnishing_and_decor);
+        catImageLists.add(R.drawable.a10_computer_accessories);
+        catImageLists.add(R.drawable.a11_flowers_gifts_and_jewellary);
+        catImageLists.add(R.drawable.a12_miscellaneous);
+        return catImageLists;
     }
 
 
@@ -117,7 +138,8 @@ public class CategoriesFragment extends Fragment {
 //        mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        categoriesAdapter = new CategoriesAdapter(getContext(), categoriesDataList);
+        ArrayList<Integer> imageicons = catLists();
+        categoriesAdapter = new CategoriesAdapter(getContext(), categoriesDataList, imageicons);
         mRecyclerView.setAdapter(categoriesAdapter);
 
 
@@ -166,7 +188,8 @@ public class CategoriesFragment extends Fragment {
 
             try{
 //                URL url = new URL("http://assets.icubeswire.com/dealscoupons/api/getcoupon.php?API_KEY=2f27e0f4118efff145aeecd8367fbb37");
-                URL url = new URL("http://couponkhajana.com/android/Coupons/categories_my_api.php");
+                URL url = new URL(CONSTANT_INITIAL_URL +
+                        "/Coupons/categories_my_api.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(45000  /*milliseconds*/ );
                 conn.setConnectTimeout(45000  /*milliseconds */);

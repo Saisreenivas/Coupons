@@ -37,6 +37,7 @@ import Model.OfferData;
 import Utils.LoadMoreItems;
 
 import static android.view.View.GONE;
+import static com.example.sai.couponduni.MainActivity.CONSTANT_INITIAL_URL;
 
 /**
  * Created by sai on 1/3/18.
@@ -201,7 +202,7 @@ public class TopStoriesFragment extends Fragment {
             try{
 //                URL url = new URL("https://tools.vcommission.com/api/coupons.php?apikey=17c554a945c8fe66424fabc11c81b81aea0d635866fa279a26eb21c37b0e8e70");
 
-                URL url = new URL("http://couponkhajana.com/android/Coupons/vcommision_api_my_db.php?page=" + page[0]);
+                URL url = new URL(CONSTANT_INITIAL_URL + "Coupons/vcommision_api_my_db.php?page=" + page[0]);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(15000  /*milliseconds*/ );
                 conn.setConnectTimeout(15000  /*milliseconds */);
